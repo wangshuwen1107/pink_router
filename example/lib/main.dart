@@ -15,15 +15,21 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    PinkRouter.init({
-      "test/pageA": (context) => PageA(),
-      "test/pageB": (context) => PageA()
-    }, scheme: "pink");
+    PinkRouter.init("pink");
+    PinkRouter.register(
+      pageMap: {
+        "test/pageA": (context) => PageA(),
+      },
+      methodMap: {
+        "test/methodA": (params) => _methodA(params),
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: PinkNavigatorWrapper.navigatorKey,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Pink Router'),
@@ -32,9 +38,10 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             children: <Widget>[
               MaterialButton(
+                color: Colors.redAccent,
                 child: Text("Route Flutter PageA"),
                 onPressed: () {
-                  PinkRouter.page("scheme://test/pageA?title=Go");
+                  PinkRouter.open("test/pageA?title=Go");
                 },
               )
             ],
@@ -42,5 +49,10 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
+  }
+
+  String _methodA(params) {
+    print("Method A is called");
+    return "methodA";
   }
 }

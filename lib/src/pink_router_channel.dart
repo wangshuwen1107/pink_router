@@ -18,12 +18,12 @@ class PinkRouterChannel {
   }
 
 
-  void page(String url, Map<String, dynamic> params) {
+  Future<dynamic> open(String url, Map<String, dynamic> params) {
     Map args = {
       "url": url,
       "params": params
     };
-    _channel.invokeMethod(kPageMethodName,args);
+    return _channel.invokeMethod(kPageMethodName,args);
   }
 
 

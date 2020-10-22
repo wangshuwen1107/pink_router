@@ -1,55 +1,86 @@
 import 'package:flutter/material.dart';
 import 'pink_router_channel.dart';
+import 'pink_navigator_wrapper.dart';
+import 'package:flutter/widgets.dart';
+
+typedef MethodBlock<R> = R Function(Map<String, dynamic> params);
 
 class PinkRouter {
-
   static PinkRouterChannel _channel;
-  static Map<String, WidgetBuilder> _routerMap;
-  static String _scheme;
+  static Map<String, WidgetBuilder> _routerMap = Map();
+  static String _scheme = "pink";
 
-  static void init(Map<String, WidgetBuilder> routersMap, {scheme = "pink"}) {
-    if (null != routersMap) {
-      _routerMap = routersMap;
-    }
-    if (null == _channel) {
-      _channel = PinkRouterChannel();
-    }
-    if (null == _scheme) {
-      _scheme = scheme;
-    }
+  static void init(String scheme) {
+    assert(scheme.isNotEmpty);
+    _scheme = scheme;
+    _channel = PinkRouterChannel();
+  }
+
+  static void register(
+      {Map<String, WidgetBuilder> pageMap,
+      Map<String, MethodBlock> methodMap}) {
+    _routerMap.clear();
     List<String> routerList = List();
-    _routerMap.forEach((key, value) {
-      routerList.add(key);
-    });
+    //page
+    if (null != pageMap) {
+      pageMap.forEach((key, value) {
+        String completeUrlStr = _autoCompleteUrl(key);
+        Uri uri = Uri.parse(_autoCompleteUrl(completeUrlStr));
+        assert(
+            null != uri &&
+                uri.scheme.isNotEmpty &&
+                uri.host.isNotEmpty &&
+                uri.path.isNotEmpty,
+            "Route Register Error scheme://host/path");
+        _routerMap[completeUrlStr] = value;
+        routerList.add(completeUrlStr);
+      });
+    }
+    //method
     _channel.registerToNative(routerList);
   }
 
-  static void page(String url, {Map<String, dynamic> params}) {
-    Uri realUrl = Uri.parse(url);
+  static Future<dynamic> open(String url, {Map<String, dynamic> params}) {
+    String completeUrlStr = _autoCompleteUrl(url);
+    Uri realUrl = Uri.parse(completeUrlStr);
     if (null == realUrl) {
-      realUrl = Uri.parse("$_scheme");
       print("❌ parse uri $url");
-      return;
+      return Future.value("ERROR");
     }
-    print("✌️Route Page url = ${getUrlStrWithoutParams(realUrl)}");
-    Map<String, String> urlParams = Uri.splitQueryString(realUrl.query);
-    if (null == params) {
+    String urlWithoutParams = _getUrlStrWithoutParams(realUrl);
+
+    Map<String, String> urlParams = Uri.splitQueryString(realUrl.query) ?? {};
+    if (null == params || params.isEmpty) {
       params = {};
     }
-    if (null != urlParams && urlParams.isNotEmpty) {
-      params.addAll(urlParams);
+    params.addAll(urlParams);
+    print("✌️ params = $params $_routerMap");
+
+    if (_routerMap.containsKey(urlWithoutParams)) {
+      WidgetBuilder pageBuilder = _routerMap[urlWithoutParams];
+      print("🐳 is Flutter $urlWithoutParams");
+      PinkNavigatorWrapper.push(
+          pageBuilder, RouteSettings(name: completeUrlStr, arguments: params));
+    } else {
+      print("🏌is Native $urlWithoutParams");
+      return _channel.open(url, params);
     }
-    print("✌️Route Page params = $params");
-    if (_routerMap.containsKey(url)) {
-      print("️Route Page params = $params");
-    }
-    _channel.page(url, params);
   }
 
-  static String getUrlStrWithoutParams(Uri uri) {
+  static String _getUrlStrWithoutParams(Uri uri) {
     if (null == uri) {
       return "";
     }
-    return uri.scheme + "://" + uri.host + "/" + uri.path;
+    return uri.scheme + "://" + uri.host + uri.path;
+  }
+
+  static String _autoCompleteUrl(String urlStr) {
+    if (urlStr.startsWith("/")) {
+      urlStr = urlStr.substring(1);
+    }
+    if (!urlStr.contains("://")) {
+      urlStr = "$_scheme://$urlStr";
+    }
+    return urlStr;
   }
 }
