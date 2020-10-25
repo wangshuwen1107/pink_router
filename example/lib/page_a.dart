@@ -14,14 +14,16 @@ class _PageAState extends State<PageA> {
   @override
   Widget build(BuildContext context) {
     var arguments = ModalRoute.of(context).settings.arguments as Map;
-    print("args =$arguments");
     return Scaffold(
       appBar: AppBar(
-        title: Text('PageA'),
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-            icon: Icon(Icons.arrow_back, size: 24), onPressed: () {}),
-      ),
+          title: Text('PageA'),
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context, "Page A Back");
+            },
+          )),
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -32,12 +34,17 @@ class _PageAState extends State<PageA> {
               height: 60,
             ),
             Text(
-              "Arguments : ${arguments}",
+              "Arguments : $arguments",
               style: TextStyle(fontSize: 14),
             )
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pink_router/pink.dart';
 import 'page_a.dart';
+import 'main_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,12 +17,16 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    SystemUiOverlayStyle systemUiOverlayStyle =
+        SystemUiOverlayStyle(statusBarColor: Colors.transparent);
+    SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+
     PinkRouter.init("pink");
     PinkRouter.register(
-      pageMap: {
+      pages: {
         "test/pageA": (context) => PageA(),
       },
-      methodMap: {
+      methods: {
         "test/methodA": (params) => _methodA(params),
       },
     );
@@ -29,30 +35,18 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      navigatorKey: PinkNavigatorWrapper.navigatorKey,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Pink Router'),
-        ),
-        body: Container(
-          child: Column(
-            children: <Widget>[
-              MaterialButton(
-                color: Colors.redAccent,
-                child: Text("Route Flutter PageA"),
-                onPressed: () {
-                  PinkRouter.open("test/pageA?title=Go");
-                },
-              )
-            ],
-          ),
-        ),
+      theme: new ThemeData(
+        primaryColor: Colors.pink[100],
+        //Changing this will change the color of the TabBar
+        accentColor: Colors.pink[100],
       ),
+      navigatorKey: PinkNavigatorWrapper.navigatorKey,
+      home: MainPage(),
     );
   }
 
   String _methodA(params) {
-    print("Method A is called");
+    print("Method A is called $params");
     return "methodA";
   }
 }

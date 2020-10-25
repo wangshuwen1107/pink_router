@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:pink_router/src/pink_intent.dart';
 import 'pink_router_channel.dart';
-import 'pink_navigator_wrapper.dart';
 import 'package:flutter/widgets.dart';
-
-typedef MethodBlock<R> = R Function(Map<String, dynamic> params);
+import 'pink_util.dart';
 
 class PinkRouter {
+  static Map<String, PinkIntent> _routerMap = Map();
+
+  static String get scheme => _scheme;
+
   static PinkRouterChannel _channel;
-  static Map<String, WidgetBuilder> _routerMap = Map();
+
   static String _scheme = "pink";
 
   static void init(String scheme) {
@@ -17,70 +20,47 @@ class PinkRouter {
   }
 
   static void register(
-      {Map<String, WidgetBuilder> pageMap,
-      Map<String, MethodBlock> methodMap}) {
+      {Map<String, WidgetBuilder> pages, Map<String, MethodBlock> methods}) {
     _routerMap.clear();
     List<String> routerList = List();
     //page
-    if (null != pageMap) {
-      pageMap.forEach((key, value) {
-        String completeUrlStr = _autoCompleteUrl(key);
-        Uri uri = Uri.parse(_autoCompleteUrl(completeUrlStr));
+    if (null != pages) {
+      pages.forEach((key, value) {
+        String urlStr = PinkUtil.getUrlKey(key);
+        Uri uri = Uri.parse(urlStr);
         assert(
-            null != uri &&
-                uri.scheme.isNotEmpty &&
-                uri.host.isNotEmpty &&
-                uri.path.isNotEmpty,
-            "Route Register Error scheme://host/path");
-        _routerMap[completeUrlStr] = value;
-        routerList.add(completeUrlStr);
+            PinkUtil.checkUri(uri), "Route Register Error scheme://host/path");
+        _routerMap[urlStr] = PinkIntent.uri(urlStr, builder: value);
+        routerList.add(urlStr);
       });
     }
     //method
+    if (null != methods) {
+      methods.forEach((key, value) {
+        String urlStr = PinkUtil.autoCompleteUrl(key);
+        Uri uri = Uri.parse(urlStr);
+        assert(
+            PinkUtil.checkUri(uri), "Route Register Error scheme://host/path");
+        _routerMap[urlStr] = PinkIntent.uri(urlStr, block: value);
+        routerList.add(urlStr);
+      });
+    }
     _channel.registerToNative(routerList);
   }
 
   static Future<dynamic> open(String url, {Map<String, dynamic> params}) {
-    String completeUrlStr = _autoCompleteUrl(url);
-    Uri realUrl = Uri.parse(completeUrlStr);
-    if (null == realUrl) {
-      print("❌ parse uri $url");
-      return Future.value("ERROR");
+    String urlStr = PinkUtil.getUrlKey(url);
+    String completeUrlStr = PinkUtil.autoCompleteUrl(url);
+    var allParams = PinkUtil.mergeParams(completeUrlStr, extraParams: params);
+    PinkIntent intent = _routerMap[urlStr];
+    if (null != intent) {
+      print("🐳  $urlStr -> Flutter params = $allParams");
+      return intent.start(allParams);
     }
-    String urlWithoutParams = _getUrlStrWithoutParams(realUrl);
-
-    Map<String, String> urlParams = Uri.splitQueryString(realUrl.query) ?? {};
-    if (null == params || params.isEmpty) {
-      params = {};
-    }
-    params.addAll(urlParams);
-    print("✌️ params = $params $_routerMap");
-
-    if (_routerMap.containsKey(urlWithoutParams)) {
-      WidgetBuilder pageBuilder = _routerMap[urlWithoutParams];
-      print("🐳 is Flutter $urlWithoutParams");
-      PinkNavigatorWrapper.push(
-          pageBuilder, RouteSettings(name: completeUrlStr, arguments: params));
-    } else {
-      print("🏌is Native $urlWithoutParams");
-      return _channel.open(url, params);
-    }
+    print("🍠  $urlStr -> Native params = $allParams ");
+    return _channel.open(urlStr, allParams);
   }
 
-  static String _getUrlStrWithoutParams(Uri uri) {
-    if (null == uri) {
-      return "";
-    }
-    return uri.scheme + "://" + uri.host + uri.path;
-  }
 
-  static String _autoCompleteUrl(String urlStr) {
-    if (urlStr.startsWith("/")) {
-      urlStr = urlStr.substring(1);
-    }
-    if (!urlStr.contains("://")) {
-      urlStr = "$_scheme://$urlStr";
-    }
-    return urlStr;
-  }
+
 }
