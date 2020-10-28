@@ -23,6 +23,7 @@ class PinkRouterChannel {
       "url": url,
       "params": params
     };
+    print("gogo $params");
     return _channel.invokeMethod(kPageMethodName,args);
   }
 

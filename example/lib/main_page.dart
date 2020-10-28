@@ -35,6 +35,14 @@ class _MainPageState extends State<MainPage> {
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () => _invokeMethodA(),
+            ),
+            MaterialButton(
+              color: Colors.pink[100],
+              child: Text(
+                "Native PageA",
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () => _invokeNativePageA(),
             )
           ],
         ),
@@ -65,6 +73,27 @@ class _MainPageState extends State<MainPage> {
 
   _invokeMethodA() {
     PinkRouter.open("test/methodA?title=Go").then((value) {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("MethodA Result"),
+              content: Text("$value"),
+              actions: <Widget>[
+                FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("确定"))
+              ],
+            );
+          });
+    });
+  }
+
+  _invokeNativePageA() {
+    PinkRouter.open("test/nativePageA?title=Go").then((value) {
       showDialog(
           context: context,
           barrierDismissible: false,

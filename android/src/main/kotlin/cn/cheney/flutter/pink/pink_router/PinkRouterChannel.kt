@@ -29,7 +29,7 @@ class PinkRouterChannel(messenger: BinaryMessenger) : MethodChannel.MethodCallHa
         }
         when (methodName) {
             "page" -> {
-                onPageAction(call.arguments)
+                onPageAction(call, result)
             }
             "method" -> {
             }
@@ -53,9 +53,23 @@ class PinkRouterChannel(messenger: BinaryMessenger) : MethodChannel.MethodCallHa
     }
 
 
-    private fun onPageAction(arg:Any){
-
+    private fun onPageAction(methodCall: MethodCall, result: MethodChannel.Result) {
+        val url = methodCall.argument<String?>("url")
+        val paramsMap = methodCall.argument<Map<String, Any>?>("params")
+        if (TextUtils.isEmpty(url)) {
+            result.error("ERROR_URL_empty", "ERROR_URL_empty", null)
+            return
+        }
+        val topActivity = PinkActivityHelper.getTopActivity()
+        if (null == topActivity) {
+            result.error("NATIVE_TOP_CONTEXT_NULL",
+                    "NATIVE_TOP_CONTEXT_NULL_PLEASE_INIT", null)
+            return
+        }
+        PinkRouter.callbackOpenActivity(topActivity, url!!, paramsMap)
     }
+
+
 
 
 }

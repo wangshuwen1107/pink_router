@@ -51,13 +51,13 @@ class PinkRouter {
   static Future<dynamic> open(String url, {Map<String, dynamic> params}) {
     String urlStr = PinkUtil.getUrlKey(url);
     String completeUrlStr = PinkUtil.autoCompleteUrl(url);
-    var allParams = PinkUtil.mergeParams(completeUrlStr, extraParams: params);
+    var allParams = PinkUtil.mergeParams(Uri.parse(completeUrlStr).query, extraParams: params);
     PinkIntent intent = _routerMap[urlStr];
     if (null != intent) {
-      print("🐳  $urlStr -> Flutter params = $allParams");
+      print("🐳 Flutter-> $urlStr   params = $allParams");
       return intent.start(allParams);
     }
-    print("🍠  $urlStr -> Native params = $allParams ");
+    print("🍠 Native-> $urlStr  params = $allParams");
     return _channel.open(urlStr, allParams);
   }
 
