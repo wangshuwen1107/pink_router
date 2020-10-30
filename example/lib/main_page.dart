@@ -51,7 +51,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   _goToPageA() {
-    PinkRouter.open("test/pageA?title=Go").then((value) {
+    PinkRouter.push("test/pageA?title=Go").then((value) {
       showDialog(
           context: context,
           barrierDismissible: false,
@@ -72,7 +72,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   _invokeMethodA() {
-    PinkRouter.open("test/methodA?title=Go").then((value) {
+    PinkRouter.push("test/methodA?title=Go").then((value) {
       showDialog(
           context: context,
           barrierDismissible: false,
@@ -93,13 +93,13 @@ class _MainPageState extends State<MainPage> {
   }
 
   _invokeNativePageA() {
-    PinkRouter.open("test/nativePageA?title=Go").then((value) {
+    PinkRouter.push("test/nativePageA?title=Go").then((value) {
       showDialog(
           context: context,
           barrierDismissible: false,
           builder: (context) {
             return AlertDialog(
-              title: Text("MethodA Result"),
+              title: Text("NativePageA Result"),
               content: Text("$value"),
               actions: <Widget>[
                 FlatButton(

@@ -1,15 +1,13 @@
 package cn.cheney.flutter.pink.pink_router_example
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.util.Log
-import cn.cheney.flutter.pink.pink_router.NativeRouterCallback
+import cn.cheney.flutter.pink.pink_router.RouterCallback
 import cn.cheney.flutter.pink.pink_router.PinkRouter
 import io.flutter.app.FlutterApplication
 import java.io.Serializable
-import java.net.URI
-import java.net.URL
 
 class App : FlutterApplication() {
 
@@ -23,22 +21,25 @@ class App : FlutterApplication() {
     }
 
     private fun initRouter() {
-        PinkRouter.setNativeCallback(object : NativeRouterCallback {
-            override fun openActivity(context: Context, url: String, params: Map<String, Any>?) {
+        PinkRouter.setNativeCallback(object : RouterCallback {
+
+            override fun onPush(context: Context, requestCode: Int, url: String, params: Map<String, Any>?) {
                 Log.i(TAG, "openActivity  context=$context url=$url params=$params")
-                val urlObject = Uri.parse(url)
                 when (url) {
                     "pink://test/nativePageA" -> {
-                        val intent = Intent(context, NativeAActivity::class.java)
+                        val intent = Intent(context, Native1Activity::class.java)
                         intent.putExtra("params", params as Serializable)
-                        context.startActivity(intent)
+                        val activity = (context as Activity)
+                        activity.startActivityForResult(intent, requestCode)
                     }
                 }
             }
 
-            override fun invokeMethod(context: Context, url: String, params: Map<String, Any?>?) {
+            override fun invokeMethod(context: Context, url: String, params: Map<String, Any>?) {
             }
         })
     }
 
 }
+
+

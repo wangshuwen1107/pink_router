@@ -28,10 +28,11 @@ class PinkRouterChannel(messenger: BinaryMessenger) : MethodChannel.MethodCallHa
             return
         }
         when (methodName) {
-            "page" -> {
-                onPageAction(call, result)
+            "push" -> {
+                onPush(call, result)
             }
             "method" -> {
+                onMethodAction(call, result)
             }
             "register" -> {
                 onRegisterRouter(call.arguments as List<*>)
@@ -42,10 +43,6 @@ class PinkRouterChannel(messenger: BinaryMessenger) : MethodChannel.MethodCallHa
     }
 
 
-    fun release() {
-        methodChannel.setMethodCallHandler(null)
-    }
-
     private fun onRegisterRouter(routerList: List<*>) {
         val routerStrList = routerList.filterIsInstance<String>()
         Log.i(PinkRouterPlugin.TAG, "onRegisterRouter $routerStrList")
@@ -53,11 +50,11 @@ class PinkRouterChannel(messenger: BinaryMessenger) : MethodChannel.MethodCallHa
     }
 
 
-    private fun onPageAction(methodCall: MethodCall, result: MethodChannel.Result) {
+    private fun onPush(methodCall: MethodCall, result: MethodChannel.Result) {
         val url = methodCall.argument<String?>("url")
         val paramsMap = methodCall.argument<Map<String, Any>?>("params")
         if (TextUtils.isEmpty(url)) {
-            result.error("ERROR_URL_empty", "ERROR_URL_empty", null)
+            result.notImplemented()
             return
         }
         val topActivity = PinkActivityHelper.getTopActivity()
@@ -66,10 +63,31 @@ class PinkRouterChannel(messenger: BinaryMessenger) : MethodChannel.MethodCallHa
                     "NATIVE_TOP_CONTEXT_NULL_PLEASE_INIT", null)
             return
         }
-        PinkRouter.callbackOpenActivity(topActivity, url!!, paramsMap)
+        val requestCode = RequestManager.generateRequestCode(result)
+        PinkRouter.onPush(topActivity, requestCode, url!!, paramsMap)
     }
 
 
+    private fun onMethodAction(methodCall: MethodCall, result: MethodChannel.Result) {
+        val url = methodCall.argument<String?>("url")
+        val paramsMap = methodCall.argument<Map<String, Any>?>("params")
+        if (TextUtils.isEmpty(url)) {
+            result.notImplemented()
+            return
+        }
+        val topActivity = PinkActivityHelper.getTopActivity()
+        if (null == topActivity) {
+            result.error("NATIVE_TOP_CONTEXT_NULL",
+                    "NATIVE_TOP_CONTEXT_NULL_PLEASE_INIT", null)
+            return
+        }
+        PinkRouter.onMethodInvoke(topActivity, url!!, paramsMap)
+    }
+
+
+    fun release() {
+        methodChannel.setMethodCallHandler(null)
+    }
 
 
 }

@@ -48,7 +48,7 @@ class PinkRouter {
     _channel.registerToNative(routerList);
   }
 
-  static Future<dynamic> open(String url, {Map<String, dynamic> params}) {
+  static Future<dynamic> push(String url, {Map<String, dynamic> params}) {
     String urlStr = PinkUtil.getUrlKey(url);
     String completeUrlStr = PinkUtil.autoCompleteUrl(url);
     var allParams = PinkUtil.mergeParams(Uri.parse(completeUrlStr).query, extraParams: params);
@@ -58,7 +58,7 @@ class PinkRouter {
       return intent.start(allParams);
     }
     print("🍠 Native-> $urlStr  params = $allParams");
-    return _channel.open(urlStr, allParams);
+    return _channel.push(urlStr, allParams);
   }
 
 

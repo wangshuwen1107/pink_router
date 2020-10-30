@@ -20,7 +20,6 @@ class _MyAppState extends State<MyApp> {
     SystemUiOverlayStyle systemUiOverlayStyle =
         SystemUiOverlayStyle(statusBarColor: Colors.transparent);
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
-
     PinkRouter.init("pink");
     PinkRouter.register(
       pages: {

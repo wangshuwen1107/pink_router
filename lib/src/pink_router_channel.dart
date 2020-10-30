@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 const String kRouterChannelName = "pink_router_channel";
 
 const String kRegisterMethodName = "register";
-const String kPageMethodName = "page";
+const String kPageMethodName = "push";
 
 class PinkRouterChannel {
 
@@ -17,14 +17,12 @@ class PinkRouterChannel {
     _channel.invokeMethod(kRegisterMethodName, routerUrlList);
   }
 
-
-  Future<dynamic> open(String url, Map<String, dynamic> params) {
+  Future<dynamic> push(String url, Map<String, dynamic> params) {
     Map args = {
       "url": url,
-      "params": params
+      "params": params,
     };
-    print("gogo $params");
-    return _channel.invokeMethod(kPageMethodName,args);
+    return _channel.invokeMethod(kPageMethodName, args);
   }
 
 
