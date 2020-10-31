@@ -1,37 +1,40 @@
 package cn.cheney.flutter.pink.pink_router
 
 import android.content.Context
-import androidx.annotation.UiThread
 import io.flutter.plugin.common.MethodChannel
-import java.nio.channels.Channel
 
-interface RouterCallback {
-    fun onPush(context: Context, requestCode: Int, url: String, params: Map<String, Any>?)
-    fun invokeMethod(context: Context, url: String, params: Map<String, Any>?)
+interface ProtocolCallback {
+    fun openContainer(context: Context, url: String, params: Map<String, Any>?, callback: ResultCallback)
+    fun invokeMethod(context: Context, url: String, params: Map<String, Any>?, callback: ResultCallback)
 }
 
+typealias ResultCallback = (Any) -> Unit
 
 object PinkRouter {
 
-    private var callback: RouterCallback? = null
+    private var callback: ProtocolCallback? = null
 
 
-    fun setNativeCallback(callback: RouterCallback) {
+    fun setProtocolCallback(callback: ProtocolCallback) {
         this.callback = callback
     }
 
-    fun onPush(context: Context, requestCode: Int, url: String, params: Map<String, Any>?) {
-        callback?.onPush(context, requestCode, url, params)
+    fun onPush(context: Context, url: String,
+               params: Map<String, Any>?, result: MethodChannel.Result) {
+        callback?.openContainer(context, url, params) {
+            result.success(it)
+        }
     }
 
-    fun onMethodInvoke(context: Context, url: String, params: Map<String, Any>?) {
-        callback?.invokeMethod(context, url, params)
+    fun onMethodInvoke(context: Context, url: String,
+                       params: Map<String, Any>?, result: MethodChannel.Result) {
+        callback?.invokeMethod(context, url, params) {
+            result.success(it)
+        }
     }
-
 
     fun push(url: String, params: Map<String, Any>?) {
-
+        
     }
-
 
 }

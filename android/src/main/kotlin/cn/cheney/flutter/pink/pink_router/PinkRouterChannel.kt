@@ -32,7 +32,7 @@ class PinkRouterChannel(messenger: BinaryMessenger) : MethodChannel.MethodCallHa
                 onPush(call, result)
             }
             "method" -> {
-                onMethodAction(call, result)
+                onInvokeMethod(call, result)
             }
             "register" -> {
                 onRegisterRouter(call.arguments as List<*>)
@@ -63,12 +63,11 @@ class PinkRouterChannel(messenger: BinaryMessenger) : MethodChannel.MethodCallHa
                     "NATIVE_TOP_CONTEXT_NULL_PLEASE_INIT", null)
             return
         }
-        val requestCode = RequestManager.generateRequestCode(result)
-        PinkRouter.onPush(topActivity, requestCode, url!!, paramsMap)
+        PinkRouter.onPush(topActivity, url!!, paramsMap,result)
     }
 
 
-    private fun onMethodAction(methodCall: MethodCall, result: MethodChannel.Result) {
+    private fun onInvokeMethod(methodCall: MethodCall, result: MethodChannel.Result) {
         val url = methodCall.argument<String?>("url")
         val paramsMap = methodCall.argument<Map<String, Any>?>("params")
         if (TextUtils.isEmpty(url)) {
@@ -81,7 +80,7 @@ class PinkRouterChannel(messenger: BinaryMessenger) : MethodChannel.MethodCallHa
                     "NATIVE_TOP_CONTEXT_NULL_PLEASE_INIT", null)
             return
         }
-        PinkRouter.onMethodInvoke(topActivity, url!!, paramsMap)
+        PinkRouter.onMethodInvoke(topActivity, url!!, paramsMap,result)
     }
 
 

@@ -26,7 +26,7 @@ class _MainPageState extends State<MainPage> {
                 "Flutter PageA",
                 style: TextStyle(color: Colors.white),
               ),
-              onPressed: () => _goToPageA(),
+              onPressed: () => _pushFlutterPageA(),
             ),
             MaterialButton(
               color: Colors.pink[100],
@@ -42,7 +42,15 @@ class _MainPageState extends State<MainPage> {
                 "Native PageA",
                 style: TextStyle(color: Colors.white),
               ),
-              onPressed: () => _invokeNativePageA(),
+              onPressed: () => _pushNativePageA(),
+            ),
+            MaterialButton(
+              color: Colors.pink[100],
+              child: Text(
+                "Native PageB",
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () => _pushNativePageA(),
             )
           ],
         ),
@@ -50,7 +58,7 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  _goToPageA() {
+  _pushFlutterPageA() {
     PinkRouter.push("test/pageA?title=Go").then((value) {
       showDialog(
           context: context,
@@ -92,8 +100,8 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
-  _invokeNativePageA() {
-    PinkRouter.push("test/nativePageA?title=Go").then((value) {
+  _pushNativePageA() {
+    PinkRouter.push("test/nativePageA?title=AAA").then((value) {
       showDialog(
           context: context,
           barrierDismissible: false,
@@ -112,4 +120,12 @@ class _MainPageState extends State<MainPage> {
           });
     });
   }
+
+
+  _pushNativePageB() {
+    PinkRouter.push("test/nativePageB?title=BBB")
+        .then((value) {
+    });
+  }
+
 }

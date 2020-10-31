@@ -21,6 +21,6 @@
         android:layout_below="@+id/args_txt"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:text="回传Flutter" />
+        android:text="跳转FlutterB" />
 
 </RelativeLayout>
