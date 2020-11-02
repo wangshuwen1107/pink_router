@@ -1,4 +1,4 @@
-import 'pink_router.dart';
+import '../core/pink_router.dart';
 
 class PinkUtil {
   /// 获取uri除query的短链

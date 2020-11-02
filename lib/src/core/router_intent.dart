@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:pink_router/pink.dart';
-import 'pink_navigator_wrapper.dart';
-import 'pink_util.dart';
+import '../util/pink_util.dart';
+import '../pink_block_type.dart';
+import 'navigator_wrapper.dart';
 
-typedef MethodBlock<R> = R Function(Map<String, dynamic> params);
-
-class PinkIntent {
+class RouterIntent {
   WidgetBuilder _builder;
   MethodBlock _methodBlock;
-  Uri _uri;
   String _urlStr;
 
-  PinkIntent.uri(String uriStr, {MethodBlock block, WidgetBuilder builder}) {
+  RouterIntent.uri(String uriStr, {MethodBlock block, WidgetBuilder builder}) {
     _urlStr = PinkUtil.getUrlKey(uriStr);
-    _uri = Uri.parse(_urlStr);
     _methodBlock = block;
     _builder = builder;
     assert(null == _methodBlock || null == _builder,

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class PageA extends StatefulWidget {
+class PageB extends StatefulWidget {
   @override
-  _PageAState createState() => _PageAState();
+  _PageBState createState() => _PageBState();
 }
 
-class _PageAState extends State<PageA> {
+class _PageBState extends State<PageB> {
   @override
   void initState() {
     super.initState();
@@ -16,12 +16,12 @@ class _PageAState extends State<PageA> {
     var arguments = ModalRoute.of(context).settings.arguments as Map;
     return Scaffold(
       appBar: AppBar(
-          title: Text('FlutterPageA'),
+          title: Text('FlutterPageB'),
           automaticallyImplyLeading: false,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pop(context, "Page A Back");
+              Navigator.pop(context, "Page B Back");
             },
           )),
       body: Center(

@@ -6,7 +6,7 @@ import android.content.Context
 import android.os.Bundle
 import java.lang.ref.WeakReference
 
-object PinkActivityHelper {
+object NativeActivityRecord {
 
     private var topActivity: WeakReference<Activity?>? = null
 

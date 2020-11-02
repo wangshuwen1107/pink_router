@@ -16,9 +16,9 @@ class NativeAActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_page_a)
         title = "NativePageA"
-        actionBar?.setHomeButtonEnabled(true)
-        actionBar?.setDisplayHomeAsUpEnabled(true)
-        
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         val paramMap = intent.getSerializableExtra("params") as? Map<*, *>
         args_txt.text = String.format(Locale.CHINA, "params : " + paramMap?.toString())
 
@@ -35,14 +35,14 @@ class NativeAActivity : AppCompatActivity() {
 
         var callback: ResultCallback? = null
 
-        fun start(context:Context,params:Serializable,callback: ResultCallback) {
+        fun start(context: Context, params: Serializable, callback: ResultCallback) {
             this.callback = callback
-            val intent= Intent(context,NativeAActivity::class.java)
-            intent.putExtra("params",params)
+            val intent = Intent(context, NativeAActivity::class.java)
+            intent.putExtra("params", params)
             context.startActivity(intent)
         }
 
-        fun callbackResult(result:Any) {
+        fun callbackResult(result: Map<String, Any>) {
             this.callback?.invoke(result)
             this.callback = null
         }

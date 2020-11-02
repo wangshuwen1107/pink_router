@@ -59,7 +59,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   _pushFlutterPageA() {
-    PinkRouter.push("test/pageA?title=Go").then((value) {
+    PinkRouter.push("/test/flutterA?title=Go").then((value) {
       showDialog(
           context: context,
           barrierDismissible: false,
@@ -121,11 +121,7 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
-
   _pushNativePageB() {
-    PinkRouter.push("test/nativePageB?title=BBB")
-        .then((value) {
-    });
+    PinkRouter.push("test/nativePageB?title=BBB").then((value) {});
   }
-
 }
