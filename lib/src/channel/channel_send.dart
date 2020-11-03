@@ -10,12 +10,24 @@ class SendChannel {
         .invokeMethod("registerRouter", routerUrlList);
   }
 
-  Future<T> navigation<T>(String urlStr, Map<String, dynamic> allParams) {
+  Future<T> push<T>(String urlStr, Map<String, dynamic> allParams) {
     Map<String, dynamic> argsMap = {};
     if (null != allParams) {
       argsMap.addAll(argsMap);
     }
     argsMap['url'] = urlStr;
-    return _channelProxy.invokeMethod("navigation", argsMap);
+    return _channelProxy.invokeMethod("push", argsMap);
   }
+
+
+  Future<T> call<T>(String urlStr, Map<String, dynamic> allParams) {
+    Map<String, dynamic> argsMap = {};
+    if (null != allParams) {
+      argsMap.addAll(argsMap);
+    }
+    argsMap['url'] = urlStr;
+    return _channelProxy.invokeMethod("call", argsMap);
+  }
+
+
 }

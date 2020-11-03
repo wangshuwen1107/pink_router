@@ -8,7 +8,7 @@ import io.flutter.plugin.common.MethodChannel
 
 
 typealias MethodHandler = (Any?, MethodChannel.Result) -> Unit
-typealias EventHandler = (String,Any?) -> Unit
+typealias EventHandler = (String, Any?) -> Unit
 
 class ChannelProxy(private val name: String, messenger: BinaryMessenger) {
 
@@ -68,12 +68,8 @@ class ChannelProxy(private val name: String, messenger: BinaryMessenger) {
         eventSink?.success(event)
     }
 
-    internal fun invokeMethod(url: String, params: Map<String, Any?>?, callback: MethodChannel.Result) {
-        val arguments = mutableMapOf<String, Any>().also {
-            it["url"] = url
-            it["params"] = params ?: mutableMapOf<String, Any>()
-        }
-        methodChannel.invokeMethod("navigation", arguments, callback)
+    internal fun invokeMethod(method: String, arguments: Any, callback: MethodChannel.Result) {
+        methodChannel.invokeMethod(method, arguments, callback)
     }
 
 }

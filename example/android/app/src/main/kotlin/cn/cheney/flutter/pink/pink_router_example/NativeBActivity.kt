@@ -3,15 +3,12 @@ package cn.cheney.flutter.pink.pink_router_example
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import cn.cheney.flutter.pink.pink_router.PinkRouter
-import cn.cheney.flutter.pink.pink_router.ResultCallback
 import kotlinx.android.synthetic.main.activity_page_a.*
 import java.io.Serializable
 import java.util.*
-import kotlin.collections.HashMap
 
 class NativeBActivity : AppCompatActivity() {
 
@@ -26,7 +23,7 @@ class NativeBActivity : AppCompatActivity() {
         args_txt.text = String.format(Locale.CHINA, "params : " + paramMap?.toString())
 
         result_btn.setOnClickListener {
-            PinkRouter.navigation("pink://test/flutterB", null) {
+            PinkRouter.push("pink://test/flutterB", null) {
                 AlertDialog.Builder(this@NativeBActivity)
                         .setTitle("回传Result")
                         .setMessage("$it")

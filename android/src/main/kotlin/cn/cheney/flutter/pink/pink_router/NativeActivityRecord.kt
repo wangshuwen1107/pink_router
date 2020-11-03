@@ -33,7 +33,6 @@ object NativeActivityRecord {
                     }
 
                     override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
-
                     }
 
                 })

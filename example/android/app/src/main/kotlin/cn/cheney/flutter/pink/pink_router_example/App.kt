@@ -22,10 +22,10 @@ class App : FlutterApplication() {
     private fun initRouter() {
         PinkRouter.init(context = this)
         PinkRouter.setProtocolCallback(object : ProtocolCallback {
-            override fun onNavigation(context: Context,
-                                      url: String,
-                                      params: Map<String, Any>?,
-                                      result: ResultCallback) {
+            override fun onPush(context: Context,
+                                url: String,
+                                params: Map<String, Any>?,
+                                result: ResultCallback) {
                 Log.i(TAG, "protocolStart  url=$url params=$params")
                 when (url) {
                     "pink://test/nativePageA" -> {
@@ -35,6 +35,11 @@ class App : FlutterApplication() {
                         NativeBActivity.start(context, params as Serializable)
                     }
                 }
+            }
+
+            override fun onCall(context: Context, 
+                                url: String, params: Map<String, Any>?,
+                                result: ResultCallback) {
             }
 
         })

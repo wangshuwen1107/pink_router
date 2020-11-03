@@ -1,11 +1,9 @@
 package cn.cheney.flutter.pink.pink_router.channel
 
 import android.text.TextUtils
-import android.util.Log
 import cn.cheney.flutter.pink.pink_router.Logger
 import cn.cheney.flutter.pink.pink_router.NativeActivityRecord
 import cn.cheney.flutter.pink.pink_router.PinkRouter
-import cn.cheney.flutter.pink.pink_router.PinkRouterPlugin
 
 class ReceiverChannel(private val channel: ChannelProxy) {
 
@@ -13,7 +11,8 @@ class ReceiverChannel(private val channel: ChannelProxy) {
 
     init {
         onRegisterRouter()
-        onProtocolStart()
+        onPush()
+        onCall()
     }
 
     private fun onRegisterRouter() {
@@ -26,8 +25,8 @@ class ReceiverChannel(private val channel: ChannelProxy) {
     }
 
 
-    private fun onProtocolStart() {
-        channel.registerMethod("navigation") { args, result ->
+    private fun onPush() {
+        channel.registerMethod("push") { args, result ->
             val argMap = (args as? Map<*, *>) ?: mapOf<String, Any>()
             val url = argMap["url"] as? String?
             val paramsMap = argMap["params"] as? Map<String, Any>?
@@ -41,7 +40,27 @@ class ReceiverChannel(private val channel: ChannelProxy) {
                         "NATIVE_TOP_CONTEXT_NULL_PLEASE_INIT", null)
                 return@registerMethod
             }
-            PinkRouter.Config.onNavigation(topActivity, url!!, paramsMap, result)
+            PinkRouter.Config.onPush(topActivity, url!!, paramsMap, result)
+        }
+    }
+
+
+    private fun onCall() {
+        channel.registerMethod("call") { args, result ->
+            val argMap = (args as? Map<*, *>) ?: mapOf<String, Any>()
+            val url = argMap["url"] as? String?
+            val paramsMap = argMap["params"] as? Map<String, Any>?
+            if (TextUtils.isEmpty(url)) {
+                result.error("URL_EMPTY", "URL_EMPTY", null)
+                return@registerMethod
+            }
+            val topActivity = NativeActivityRecord.getTopActivity()
+            if (null == topActivity) {
+                result.error("NATIVE_TOP_CONTEXT_NULL",
+                        "NATIVE_TOP_CONTEXT_NULL_PLEASE_INIT", null)
+                return@registerMethod
+            }
+            PinkRouter.Config.onPush(topActivity, url!!, paramsMap, result)
         }
     }
 

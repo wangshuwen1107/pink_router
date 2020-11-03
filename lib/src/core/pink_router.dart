@@ -1,34 +1,22 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:pink_router/pink.dart';
+
 import '../util/pink_util.dart';
-import '../channel/channel_send.dart';
-import '../channel/channel_receive.dart';
-import '../channel/channel_proxy.dart';
-import '../module/module_manager.dart';
+import 'pink_router_wrapper.dart';
 import '../module/pink_module.dart';
-import '../core/router_intent.dart';
 
 class PinkRouter {
   static String get scheme => _scheme;
-
-  static ChannelProxy _channelProxy = ChannelProxy("main");
-
-  static SendChannel sendChannel;
-
-  static ReceiveChannel receiveChannel;
 
   static String _scheme = "pink";
 
   static void init(String scheme) {
     assert(scheme.isNotEmpty);
     _scheme = scheme;
-    sendChannel = SendChannel(_channelProxy);
-    receiveChannel = ReceiveChannel(_channelProxy);
   }
 
   static void register(List<PinkModule> modules) {
-    modules.forEach((element) {
-      ModuleManager.getInstance().register(element);
-    });
+    PinkRouterWrapper.getInstance().register(modules);
   }
 
   static Future<dynamic> push(String url, {Map<String, dynamic> params}) {
@@ -36,12 +24,30 @@ class PinkRouter {
     String completeUrlStr = PinkUtil.autoCompleteUrl(url);
     var allParams = PinkUtil.mergeParams(Uri.parse(completeUrlStr).query,
         extraParams: params);
-    RouterIntent intent = ModuleManager.getInstance().getIntent(urlStr);
-    if (null != intent) {
-      print("🐳 Flutter-> $urlStr   params = $allParams");
-      return intent.start(allParams);
+
+    WidgetBuilder widgetBuilder =
+        PinkRouterWrapper.getInstance().getPage(urlStr);
+    if (null != widgetBuilder) {
+      print("🐳 Flutter page: $urlStr   params = $allParams");
+      return PinkRouterWrapper.getInstance()
+          .push(widgetBuilder, RouteSettings(name: urlStr, arguments: params));
     }
-    print("🍠 Native-> $urlStr  params = $allParams");
-    return sendChannel.navigation(urlStr, allParams);
+    print("💘 Native page: $urlStr  params = $allParams");
+    return PinkRouterWrapper.getInstance().push2Native(url, params);
+  }
+
+  static Future<dynamic> call(String url, {Map<String, dynamic> params}) {
+    String urlStr = PinkUtil.getUrlKey(url);
+    String completeUrlStr = PinkUtil.autoCompleteUrl(url);
+    var allParams = PinkUtil.mergeParams(Uri.parse(completeUrlStr).query,
+        extraParams: params);
+
+    MethodBlock methodBlock = PinkRouterWrapper.getInstance().getMethod(urlStr);
+    if (null != methodBlock) {
+      print("🐳 Flutter method: $urlStr   params = $allParams");
+      return methodBlock.call(params);
+    }
+    print("💘 Native method: $urlStr  params = $allParams");
+    return PinkRouterWrapper.getInstance().call2Native(url, params);
   }
 }

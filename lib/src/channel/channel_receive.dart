@@ -1,15 +1,15 @@
 import 'channel_proxy.dart';
-
+import '../core/pink_router.dart';
 
 class ReceiveChannel {
   final ChannelProxy _channelProxy;
 
   ReceiveChannel(this._channelProxy) {
-    onNavigation();
+    onPush();
   }
 
-  onNavigation() {
-    _channelProxy.registerMethodHandler("navigation", (args) {
+  onPush() {
+    _channelProxy.registerMethodHandler("push", (args) {
       String url = args["url"];
       Map params = args["params"];
       Map<String, dynamic> stringParams = {};
@@ -18,7 +18,7 @@ class ReceiveChannel {
           stringParams[key] = value;
         }
       });
-     // return routinte.push(url, params: stringParams);
+      return PinkRouter.push(url, params: stringParams);
     });
   }
 }
