@@ -28,6 +28,32 @@ internal object PinkRouterWrapper {
     }
 
 
+    fun syncPop(params: Any? = null) {
+        val topActivity = NativeActivityRecord.getTopActivity()
+        if (null == topActivity || topActivity !is PinkFlutterActivity) {
+            return
+        }
+        val index = (topActivity).index()
+        val prevKey: String?
+        if (index == 0) {
+            prevKey = topActivity.url() + "_" + topActivity.index()
+            containerStack.remove(topActivity.containerId())
+            resultCallbackMap.remove(prevKey)?.invoke(params)
+            topActivity.finish()
+        } else {
+            val containerPageStack = pageMap[topActivity.containerId()]
+            containerPageStack?.pop()
+            prevKey = containerPageStack?.peek()
+            val prevUrl = prevKey?.split("_")?.get(0)
+            topActivity.intent.putExtra(PinkFlutterActivity.KEY_URL, prevUrl)
+            topActivity.intent.putExtra(PinkFlutterActivity.KEY_INDEX, index - 1)
+
+            engine.sendChannel.pop(params)
+
+        }
+        resultCallbackMap.remove(prevKey)?.invoke(params)
+    }
+    
     fun push(url: String, params: Map<String, Any>?, callback: ResultCallback?) {
         val topActivity = NativeActivityRecord.getTopActivity()
         if (null == topActivity) {
@@ -66,33 +92,11 @@ internal object PinkRouterWrapper {
         callback?.let {
             resultCallbackMap[key] = it
         }
-        val intent = PinkFlutterActivity.generateIntent(topActivity,
+        val intent = PinkFlutterActivity.newIntent(topActivity,
                 url, params, containerId, index)
         topActivity.startActivity(intent)
     }
 
-
-    fun pop(params: Any? = null) {
-        val topActivity = NativeActivityRecord.getTopActivity()
-        if (null == topActivity || topActivity !is PinkFlutterActivity) {
-            return
-        }
-        val index = (topActivity).index()
-        val prevKey: String?
-        if (index == 0) {
-            prevKey = topActivity.url() + "_" + topActivity.index()
-            containerStack.remove(topActivity.containerId())
-            resultCallbackMap.remove(prevKey)?.invoke(params)
-            topActivity.finish()
-        } else {
-            prevKey = pageMap[topActivity.containerId()]?.pop()
-            val prevUrl = prevKey?.split("_")?.get(0)
-            topActivity.intent.putExtra(PinkFlutterActivity.KEY_URL, prevUrl)
-            topActivity.intent.putExtra(PinkFlutterActivity.KEY_INDEX, index - 1)
-
-        }
-        resultCallbackMap.remove(prevKey)?.invoke(params)
-    }
 
     fun call(url: String, params: Map<String, Any>?, callback: ResultCallback?) {
         engine.sendChannel.call(url, params, callback)

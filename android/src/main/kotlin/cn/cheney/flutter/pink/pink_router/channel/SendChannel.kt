@@ -62,6 +62,21 @@ class SendChannel(private val channel: ChannelProxy) {
         })
     }
 
+    
+    fun pop(result: Any?){
+        channel.invokeMethod("pop",result,object :MethodChannel.Result{
+            
+            override fun notImplemented() {
+            }
+
+            override fun error(errorCode: String?, errorMessage: String?, errorDetails: Any?) {
+            }
+
+            override fun success(result: Any?) {
+            }
+
+        })
+    }
 
     fun sendEvent(name: String, params: Map<String, Any?>?) {
 

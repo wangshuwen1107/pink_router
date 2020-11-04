@@ -37,7 +37,7 @@ class App : FlutterApplication() {
                 }
             }
 
-            override fun onCall(context: Context, 
+            override fun onCall(context: Context,
                                 url: String, params: Map<String, Any>?,
                                 result: ResultCallback) {
             }

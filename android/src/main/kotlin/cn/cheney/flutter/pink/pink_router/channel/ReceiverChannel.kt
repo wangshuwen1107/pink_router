@@ -1,7 +1,6 @@
 package cn.cheney.flutter.pink.pink_router.channel
 
 import android.text.TextUtils
-import cn.cheney.flutter.pink.pink_router.util.Logger
 import cn.cheney.flutter.pink.pink_router.NativeActivityRecord
 import cn.cheney.flutter.pink.pink_router.PinkRouter
 import cn.cheney.flutter.pink.pink_router.PinkRouterWrapper
@@ -54,7 +53,7 @@ class ReceiverChannel(private val channel: ChannelProxy) {
 
     private fun onPop() {
         channel.registerMethod("pop") { args, result ->
-            PinkRouterWrapper.pop(args)
+            PinkRouterWrapper.syncPop(args)
             result.success(true)
         }
     }
@@ -75,7 +74,7 @@ class ReceiverChannel(private val channel: ChannelProxy) {
                         "NATIVE_TOP_CONTEXT_NULL_PLEASE_INIT", null)
                 return@registerMethod
             }
-            PinkRouter.Config.onPush(topActivity, url!!, paramsMap, result)
+            PinkRouter.Config.onCall(topActivity, url!!, paramsMap, result)
         }
     }
 

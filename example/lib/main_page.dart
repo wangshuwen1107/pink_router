@@ -55,7 +55,7 @@ class _MainPageState extends State<MainPage> {
                 "Native PageB",
                 style: TextStyle(color: Colors.white),
               ),
-              onPressed: () => _pushNativePageA(),
+              onPressed: () => _pushNativePageB(),
             )
           ],
         ),

@@ -1,13 +1,7 @@
 package cn.cheney.flutter.pink.pink_router
 
 import android.content.Context
-import cn.cheney.flutter.pink.pink_router.util.Logger
-import io.flutter.embedding.android.FlutterActivity
-import io.flutter.embedding.android.PinkFlutterActivity
-import io.flutter.embedding.android.containerId
-import io.flutter.embedding.android.index
 import io.flutter.plugin.common.MethodChannel
-import java.util.*
 
 interface NativeCallback {
     fun onPush(context: Context, url: String, params: Map<String, Any>?, result: ResultCallback)
@@ -16,33 +10,35 @@ interface NativeCallback {
 
 typealias ResultCallback = (Any?) -> Unit
 
-class PinkRouter {
+object PinkRouter {
 
-    companion object {
-
-        fun push(url: String, params: Map<String, Any>? = null, callback: ResultCallback? = null) {
-            PinkRouterWrapper.push(url, params, callback)
-        }
-
-
-        fun pop(params: Any? = null) {
-            PinkRouterWrapper.pop(params)
-        }
-
-        fun call(url: String, params: Map<String, Any>?, callback: ResultCallback?) {
-            PinkRouterWrapper.call(url, params, callback)
-        }
-
-        fun init(context: Context) {
-            NativeActivityRecord.registerCallbacks(context)
-            PinkRouterWrapper.init(context)
-        }
-
-        fun setProtocolCallback(callback: NativeCallback) {
-            Config.callback = callback
-        }
-
+    @JvmStatic
+    fun init(context: Context) {
+        NativeActivityRecord.registerCallbacks(context)
+        PinkRouterWrapper.init(context)
     }
+
+    @JvmStatic
+    fun push(url: String, params: Map<String, Any>? = null, callback: ResultCallback? = null) {
+        PinkRouterWrapper.push(url, params, callback)
+    }
+
+    @JvmStatic
+    fun pop(params: Any? = null) {
+        PinkRouterWrapper.syncPop(params)
+    }
+
+    @JvmStatic
+    fun call(url: String, params: Map<String, Any>?, callback: ResultCallback?) {
+        PinkRouterWrapper.call(url, params, callback)
+    }
+
+
+    @JvmStatic
+    fun setProtocolCallback(callback: NativeCallback) {
+        Config.callback = callback
+    }
+
 
     internal object Config {
 

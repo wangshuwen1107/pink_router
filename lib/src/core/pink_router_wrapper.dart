@@ -66,13 +66,16 @@ class PinkRouterWrapper {
         extraParams: params);
     WidgetBuilder builder = _pageMap[urlStr];
     if (null != builder) {
-      print("🐳 Open flutter page: $urlStr   params = $allParams");
       var pageRoute = MaterialPageRoute(
           builder: builder,
-          settings: RouteSettings(name: urlStr, arguments: params));
+          settings: RouteSettings(name: urlStr, arguments: allParams));
       return _navigator.push(pageRoute).catchError((error) {});
     }
     return Future.value(false);
+  }
+
+  void onPop<T extends Object>([T result]) {
+    _navigator.pop(result);
   }
 
   Future<T> push<T>(String url, Map<String, dynamic> params) {
@@ -80,10 +83,11 @@ class PinkRouterWrapper {
     String completeUrlStr = PinkUtil.autoCompleteUrl(url);
     var allParams = PinkUtil.mergeParams(Uri.parse(completeUrlStr).query,
         extraParams: params);
+    print("参数 $allParams");
     return sendChannel.push(urlStr, allParams);
   }
 
-  pop<T extends Object>([T result]) {
+  void pop<T extends Object>([T result]) {
     _navigator.pop(result);
     sendChannel.pop(result);
   }

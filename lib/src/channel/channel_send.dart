@@ -15,6 +15,7 @@ class SendChannel {
       argsMap.addAll(argsMap);
     }
     argsMap['url'] = urlStr;
+    argsMap['params'] = allParams;
     return _channelProxy.invokeMethod("push", argsMap);
   }
 

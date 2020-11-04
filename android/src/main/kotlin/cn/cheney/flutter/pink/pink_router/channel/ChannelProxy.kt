@@ -70,7 +70,7 @@ class ChannelProxy(private val name: String, messenger: BinaryMessenger) {
         eventSink?.success(event)
     }
 
-    internal fun invokeMethod(method: String, arguments: Any, callback: MethodChannel.Result) {
+    internal fun invokeMethod(method: String, arguments: Any?, callback: MethodChannel.Result) {
         methodChannel.invokeMethod(method, arguments, callback)
     }
 

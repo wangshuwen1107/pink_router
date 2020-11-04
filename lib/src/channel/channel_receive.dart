@@ -8,6 +8,7 @@ class ReceiveChannel {
 
   ReceiveChannel(this._channelProxy) {
     onPush();
+    onPop();
   }
 
   onPush() {
@@ -21,6 +22,13 @@ class ReceiveChannel {
         }
       });
       return PinkRouterWrapper.getInstance().onPush(url, stringParams);
+    });
+  }
+
+  onPop() {
+    _channelProxy.registerMethodHandler("pop", (args) {
+      PinkRouterWrapper.getInstance().onPop(args);
+      return Future.value(true);
     });
   }
 }
