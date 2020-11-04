@@ -2,7 +2,7 @@ package cn.cheney.flutter.pink.pink_router_example
 
 import android.content.Context
 import android.util.Log
-import cn.cheney.flutter.pink.pink_router.ProtocolCallback
+import cn.cheney.flutter.pink.pink_router.NativeCallback
 import cn.cheney.flutter.pink.pink_router.PinkRouter
 import cn.cheney.flutter.pink.pink_router.ResultCallback
 import io.flutter.app.FlutterApplication
@@ -21,7 +21,7 @@ class App : FlutterApplication() {
 
     private fun initRouter() {
         PinkRouter.init(context = this)
-        PinkRouter.setProtocolCallback(object : ProtocolCallback {
+        PinkRouter.setProtocolCallback(object : NativeCallback {
             override fun onPush(context: Context,
                                 url: String,
                                 params: Map<String, Any>?,
@@ -29,10 +29,10 @@ class App : FlutterApplication() {
                 Log.i(TAG, "protocolStart  url=$url params=$params")
                 when (url) {
                     "pink://test/nativePageA" -> {
-                        NativeAActivity.start(context, params as Serializable, result)
+                        NativeAActivity.start(context, params as? Serializable?, result)
                     }
                     "pink://test/nativePageB" -> {
-                        NativeBActivity.start(context, params as Serializable)
+                        NativeBActivity.start(context, params as? Serializable?)
                     }
                 }
             }

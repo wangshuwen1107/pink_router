@@ -11,10 +11,15 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Pink Router',
-        ),
-      ),
+          title: Text(
+            'Pink Router',
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              PinkRouter.pop();
+            },
+          )),
       body: Container(
         padding: EdgeInsets.only(left: 12),
         child: Column(

@@ -1,4 +1,4 @@
-package cn.cheney.flutter.pink.pink_router
+package cn.cheney.flutter.pink.pink_router.util
 
 import android.util.Log
 

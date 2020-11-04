@@ -6,8 +6,7 @@ class SendChannel {
   SendChannel(this._channelProxy);
 
   Future<T> registerToNative<T>(List<String> routerUrlList) {
-    return _channelProxy
-        .invokeMethod("registerRouter", routerUrlList);
+    return _channelProxy.invokeMethod("registerRouter", routerUrlList);
   }
 
   Future<T> push<T>(String urlStr, Map<String, dynamic> allParams) {
@@ -19,6 +18,9 @@ class SendChannel {
     return _channelProxy.invokeMethod("push", argsMap);
   }
 
+  Future<dynamic> pop<T extends Object>([T result]) {
+    return _channelProxy.invokeMethod("pop", result);
+  }
 
   Future<T> call<T>(String urlStr, Map<String, dynamic> allParams) {
     Map<String, dynamic> argsMap = {};
@@ -28,6 +30,4 @@ class SendChannel {
     argsMap['url'] = urlStr;
     return _channelProxy.invokeMethod("call", argsMap);
   }
-
-
 }

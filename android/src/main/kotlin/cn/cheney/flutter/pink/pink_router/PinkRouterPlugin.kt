@@ -1,8 +1,7 @@
 package cn.cheney.flutter.pink.pink_router
 
-import android.util.Log
 import androidx.annotation.NonNull;
-import cn.cheney.flutter.pink.pink_router.channel.ChannelProxy
+import cn.cheney.flutter.pink.pink_router.util.Logger
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.PluginRegistry.Registrar

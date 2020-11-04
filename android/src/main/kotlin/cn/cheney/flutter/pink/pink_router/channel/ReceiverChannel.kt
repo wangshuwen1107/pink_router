@@ -1,9 +1,10 @@
 package cn.cheney.flutter.pink.pink_router.channel
 
 import android.text.TextUtils
-import cn.cheney.flutter.pink.pink_router.Logger
+import cn.cheney.flutter.pink.pink_router.util.Logger
 import cn.cheney.flutter.pink.pink_router.NativeActivityRecord
 import cn.cheney.flutter.pink.pink_router.PinkRouter
+import cn.cheney.flutter.pink.pink_router.PinkRouterWrapper
 
 class ReceiverChannel(private val channel: ChannelProxy) {
 
@@ -12,6 +13,7 @@ class ReceiverChannel(private val channel: ChannelProxy) {
     init {
         onRegisterRouter()
         onPush()
+        onPop()
         onCall()
     }
 
@@ -19,8 +21,7 @@ class ReceiverChannel(private val channel: ChannelProxy) {
         channel.registerMethod("registerRouter") { args, result ->
             val routerStrList = (args as? List<*>?)?.filterIsInstance<String>()
             this.routerList = routerStrList ?: arrayListOf()
-            Logger.d("Native received  $routerStrList")
-            result.success("success")
+            result.success(true)
         }
     }
 
@@ -40,7 +41,21 @@ class ReceiverChannel(private val channel: ChannelProxy) {
                         "NATIVE_TOP_CONTEXT_NULL_PLEASE_INIT", null)
                 return@registerMethod
             }
-            PinkRouter.Config.onPush(topActivity, url!!, paramsMap, result)
+            if (routerList.indexOf(url) != -1) {
+                PinkRouter.push(url!!, paramsMap) {
+                    result.success(it)
+                }
+            } else {
+                PinkRouter.Config.onPush(topActivity, url!!, paramsMap, result)
+            }
+        }
+    }
+
+
+    private fun onPop() {
+        channel.registerMethod("pop") { args, result ->
+            PinkRouterWrapper.pop(args)
+            result.success(true)
         }
     }
 

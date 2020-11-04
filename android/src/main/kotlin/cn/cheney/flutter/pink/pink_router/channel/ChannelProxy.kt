@@ -1,6 +1,7 @@
 package cn.cheney.flutter.pink.pink_router.channel
 
 import android.text.TextUtils
+import cn.cheney.flutter.pink.pink_router.util.Logger
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
@@ -34,6 +35,7 @@ class ChannelProxy(private val name: String, messenger: BinaryMessenger) {
                     result.notImplemented()
                     return
                 }
+                Logger.d("💖 Flutter->Native[$methodName] args=${call.arguments}")
                 methodHandler.invoke(call.arguments, result)
             }
         })

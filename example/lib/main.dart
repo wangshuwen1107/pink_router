@@ -29,11 +29,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return PinkApp(
-        home: MainPage(),
         theme: new ThemeData(
-          primaryColor: Colors.pink[100],
-          //Changing this will change the color of the TabBar
-          accentColor: Colors.pink[100],
-        ));
+      primaryColor: Colors.pink[100],
+      //Changing this will change the color of the TabBar
+      accentColor: Colors.pink[100],
+    ));
   }
 }

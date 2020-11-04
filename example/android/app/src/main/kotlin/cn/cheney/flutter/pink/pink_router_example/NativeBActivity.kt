@@ -20,10 +20,12 @@ class NativeBActivity : AppCompatActivity() {
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
         val paramMap = intent.getSerializableExtra("params") as? Map<*, *>
-        args_txt.text = String.format(Locale.CHINA, "params : " + paramMap?.toString())
+        args_txt.text = String.format(Locale.CHINA, "params :${paramMap?.toString() ?: "form launcher"} ")
 
         result_btn.setOnClickListener {
-            PinkRouter.push("pink://test/flutterB", null) {
+            val params = mutableMapOf<String, Any>()
+            params["NativeB"] = "i am form nativeB"
+            PinkRouter.push("pink://test/flutterB", params) {
                 AlertDialog.Builder(this@NativeBActivity)
                         .setTitle("回传Result")
                         .setMessage("$it")
@@ -34,9 +36,12 @@ class NativeBActivity : AppCompatActivity() {
 
     companion object {
 
-        fun start(context: Context, params: Serializable) {
+        fun start(context: Context, params: Serializable?) {
             val intent = Intent(context, NativeBActivity::class.java)
-            intent.putExtra("params", params)
+            params?.let {
+                intent.putExtra("params", it)
+            }
+
             context.startActivity(intent)
         }
 

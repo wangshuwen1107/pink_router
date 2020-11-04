@@ -1,3 +1,5 @@
+import 'package:pink_router/src/core/pink_router_wrapper.dart';
+
 import 'channel_proxy.dart';
 import '../core/pink_router.dart';
 
@@ -18,7 +20,7 @@ class ReceiveChannel {
           stringParams[key] = value;
         }
       });
-      return PinkRouter.push(url, params: stringParams);
+      return PinkRouterWrapper.getInstance().onPush(url, stringParams);
     });
   }
 }

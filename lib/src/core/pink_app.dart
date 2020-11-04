@@ -4,7 +4,6 @@ import 'package:pink_router/src/core/pink_router_wrapper.dart';
 class PinkApp extends MaterialApp {
   PinkApp({
     Key key,
-    Widget home,
     String title = '',
     GenerateAppTitle onGenerateTitle,
     Color color,
@@ -32,7 +31,9 @@ class PinkApp extends MaterialApp {
             onGenerateTitle: onGenerateTitle,
             color: color,
             theme: theme,
-            home: home,
+            home: Container(
+              color: Colors.white
+            ),
             darkTheme: darkTheme,
             themeMode: themeMode,
             locale: locale,

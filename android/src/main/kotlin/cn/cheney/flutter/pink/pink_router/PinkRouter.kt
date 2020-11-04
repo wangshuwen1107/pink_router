@@ -1,61 +1,52 @@
 package cn.cheney.flutter.pink.pink_router
 
 import android.content.Context
-import android.content.Intent
+import cn.cheney.flutter.pink.pink_router.util.Logger
+import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.android.PinkFlutterActivity
+import io.flutter.embedding.android.containerId
+import io.flutter.embedding.android.index
 import io.flutter.plugin.common.MethodChannel
+import java.util.*
 
-interface ProtocolCallback {
+interface NativeCallback {
     fun onPush(context: Context, url: String, params: Map<String, Any>?, result: ResultCallback)
     fun onCall(context: Context, url: String, params: Map<String, Any>?, result: ResultCallback)
 }
 
 typealias ResultCallback = (Any?) -> Unit
 
-object PinkRouter {
+class PinkRouter {
 
-    lateinit var engine: PinkEngine
+    companion object {
 
-    fun init(context: Context) {
-        Logger.d("init is called ")
-        engine = PinkEngine(context)
-        NativeActivityRecord.registerCallbacks(context)
-
-    }
-
-    fun setProtocolCallback(callback: ProtocolCallback) {
-        Config.callback = callback
-    }
-
-    /**
-     * 打开flutter页面
-     */
-    fun push(url: String, params: Map<String, Any>?, callback: ResultCallback?) {
-        val topActivity = NativeActivityRecord.getTopActivity()
-        if (null == topActivity) {
-            callback?.invoke("error_context")
-            return
+        fun push(url: String, params: Map<String, Any>? = null, callback: ResultCallback? = null) {
+            PinkRouterWrapper.push(url, params, callback)
         }
-        val intent = Intent(topActivity, PinkFlutterActivity::class.java)
-        intent.putExtra(PinkFlutterActivity.KEY_ENGINE_ID, "main")
-        intent.putExtra(PinkFlutterActivity.KEY_URL, url)
-        params?.let {
-            intent.putExtra(PinkFlutterActivity.KEY_PARAMS, it as HashMap)
+
+
+        fun pop(params: Any? = null) {
+            PinkRouterWrapper.pop(params)
         }
-        topActivity.startActivity(intent)
-    }
 
-    /**
-     * 执行flutter方法
-     */
-    fun call(url: String, params: Map<String, Any>?, callback: ResultCallback?){
-        engine.sendChannel.call(url, params, callback)
-    }
+        fun call(url: String, params: Map<String, Any>?, callback: ResultCallback?) {
+            PinkRouterWrapper.call(url, params, callback)
+        }
 
+        fun init(context: Context) {
+            NativeActivityRecord.registerCallbacks(context)
+            PinkRouterWrapper.init(context)
+        }
+
+        fun setProtocolCallback(callback: NativeCallback) {
+            Config.callback = callback
+        }
+
+    }
 
     internal object Config {
 
-        var callback: ProtocolCallback? = null
+        var callback: NativeCallback? = null
 
         fun onPush(context: Context, url: String,
                    params: Map<String, Any>?, result: MethodChannel.Result) {
@@ -72,7 +63,6 @@ object PinkRouter {
         }
 
     }
-
 
 }
 

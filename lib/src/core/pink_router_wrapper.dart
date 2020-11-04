@@ -27,6 +27,8 @@ class PinkRouterWrapper {
 
   ReceiveChannel receiveChannel;
 
+  Map<String, WidgetBuilder> get routers => _pageMap;
+
   PinkRouterWrapper._internal() {
     _channelProxy = ChannelProxy('main');
     sendChannel = SendChannel(_channelProxy);
@@ -57,30 +59,48 @@ class PinkRouterWrapper {
         .catchError((e) {});
   }
 
-  WidgetBuilder getPage(String urlStr) {
-    return _pageMap[urlStr];
+  Future<dynamic> onPush(String url, Map<String, dynamic> params) {
+    String urlStr = PinkUtil.getUrlKey(url);
+    String completeUrlStr = PinkUtil.autoCompleteUrl(url);
+    var allParams = PinkUtil.mergeParams(Uri.parse(completeUrlStr).query,
+        extraParams: params);
+    WidgetBuilder builder = _pageMap[urlStr];
+    if (null != builder) {
+      print("🐳 Open flutter page: $urlStr   params = $allParams");
+      var pageRoute = MaterialPageRoute(
+          builder: builder,
+          settings: RouteSettings(name: urlStr, arguments: params));
+      return _navigator.push(pageRoute).catchError((error) {});
+    }
+    return Future.value(false);
   }
 
-  MethodBlock getMethod(String urlStr) {
-    return _methodMap[urlStr];
+  Future<T> push<T>(String url, Map<String, dynamic> params) {
+    String urlStr = PinkUtil.getUrlKey(url);
+    String completeUrlStr = PinkUtil.autoCompleteUrl(url);
+    var allParams = PinkUtil.mergeParams(Uri.parse(completeUrlStr).query,
+        extraParams: params);
+    return sendChannel.push(urlStr, allParams);
   }
 
-  Future<T> push<T>(WidgetBuilder builder, RouteSettings routeSettings) {
-    var pageRoute =
-    MaterialPageRoute(builder: builder, settings: routeSettings);
-    return _navigator.push(pageRoute).catchError((error) {});
+  pop<T extends Object>([T result]) {
+    _navigator.pop(result);
+    sendChannel.pop(result);
   }
 
-
-  Future<T> push2Native<T>(String url, Map<String, dynamic> params) {
-    return sendChannel.push(url, params);
-  }
-
-
-  Future<T> call2Native<T>(String url, Map<String, dynamic> params) {
+  Future<T> call<T>(String url, Map<String, dynamic> params) {
+    String urlStr = PinkUtil.getUrlKey(url);
+    String completeUrlStr = PinkUtil.autoCompleteUrl(url);
+    var allParams = PinkUtil.mergeParams(Uri.parse(completeUrlStr).query,
+        extraParams: params);
+    MethodBlock methodBlock = _methodMap[urlStr];
+    if (null != methodBlock) {
+      print("🐳 Flutter method: $urlStr   params = $allParams");
+      return methodBlock.call(params);
+    }
+    print("💘 Native method: $urlStr  params = $allParams");
     return sendChannel.call(url, params);
   }
-
 
   void _addRoute2Map(String url, {WidgetBuilder builder, MethodBlock block}) {
     String key = PinkUtil.getUrlKey(url);

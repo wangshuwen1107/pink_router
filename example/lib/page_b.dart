@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pink_router/pink.dart';
 
 class PageB extends StatefulWidget {
   @override
@@ -21,7 +22,7 @@ class _PageBState extends State<PageB> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pop(context, "Page B Back");
+              PinkRouter.pop({"flutterPageB": "resultOk"});
             },
           )),
       body: Center(
@@ -36,7 +37,20 @@ class _PageBState extends State<PageB> {
             Text(
               "Arguments : $arguments",
               style: TextStyle(fontSize: 14),
-            )
+            ),
+            MaterialButton(
+              color: Colors.pink[100],
+              child: Text(
+                "Flutter PageA",
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () => {
+                PinkRouter.push("/test/flutterA", params: {"key": "value"})
+                    .then((val) {
+                  print("PageB 收到回调 $val");
+                })
+              },
+            ),
           ],
         ),
       ),

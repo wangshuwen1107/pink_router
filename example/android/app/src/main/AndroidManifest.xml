@@ -10,6 +10,11 @@
         android:icon="@mipmap/ic_launcher"
         android:label="pink_router_example"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+
         <activity
             android:name="io.flutter.embedding.android.PinkFlutterActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
@@ -26,9 +31,13 @@
         </activity>
 
 
-        <meta-data
-            android:name="flutterEmbedding"
-            android:value="2" />
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
 
         <activity
             android:name=".NativeAActivity"
@@ -38,11 +47,6 @@
 
         <activity
             android:name=".NativeBActivity"
-            android:screenOrientation="portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:screenOrientation="portrait" />
     </application>
 </manifest>
