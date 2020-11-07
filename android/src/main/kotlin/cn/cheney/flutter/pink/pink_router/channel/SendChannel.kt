@@ -1,6 +1,7 @@
 package cn.cheney.flutter.pink.pink_router.channel
 
 import cn.cheney.flutter.pink.pink_router.ResultCallback
+import cn.cheney.flutter.pink.pink_router.util.Logger
 import io.flutter.plugin.common.MethodChannel
 
 class SendChannel(private val channel: ChannelProxy) {
@@ -62,17 +63,21 @@ class SendChannel(private val channel: ChannelProxy) {
         })
     }
 
-    
-    fun pop(result: Any?){
-        channel.invokeMethod("pop",result,object :MethodChannel.Result{
-            
+
+    fun pop(result: Any?, callback: ResultCallback? = null) {
+        channel.invokeMethod("pop", result, object : MethodChannel.Result {
+
             override fun notImplemented() {
+                callback?.invoke(false)
             }
 
             override fun error(errorCode: String?, errorMessage: String?, errorDetails: Any?) {
+                callback?.invoke(false)
             }
 
-            override fun success(result: Any?) {
+            override fun success(flutterResult: Any?) {
+                Logger.d("====入参=$result 回参=$flutterResult")
+                callback?.invoke(flutterResult)
             }
 
         })

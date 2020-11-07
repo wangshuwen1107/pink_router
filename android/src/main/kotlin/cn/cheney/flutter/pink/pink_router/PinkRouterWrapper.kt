@@ -1,6 +1,7 @@
 package cn.cheney.flutter.pink.pink_router
 
 import android.content.Context
+import cn.cheney.flutter.pink.pink_router.util.Logger
 import io.flutter.embedding.android.PinkFlutterActivity
 import io.flutter.embedding.android.containerId
 import io.flutter.embedding.android.index
@@ -36,10 +37,19 @@ internal object PinkRouterWrapper {
         val index = (topActivity).index()
         val prevKey: String?
         if (index == 0) {
+            Logger.d("本地 pop $params")
+
             prevKey = topActivity.url() + "_" + topActivity.index()
-            containerStack.remove(topActivity.containerId())
-            resultCallbackMap.remove(prevKey)?.invoke(params)
-            topActivity.finish()
+
+            engine.sendChannel.pop(params) {
+                Logger.d("本地 Flutter pop $params return $it")
+                val popResult = it as? Boolean
+                if (popResult != null && popResult) {
+                    containerStack.remove(topActivity.containerId())
+                    resultCallbackMap.remove(prevKey)?.invoke(params)
+                    topActivity.finish()
+                }
+            }
         } else {
             val containerPageStack = pageMap[topActivity.containerId()]
             containerPageStack?.pop()
@@ -47,13 +57,12 @@ internal object PinkRouterWrapper {
             val prevUrl = prevKey?.split("_")?.get(0)
             topActivity.intent.putExtra(PinkFlutterActivity.KEY_URL, prevUrl)
             topActivity.intent.putExtra(PinkFlutterActivity.KEY_INDEX, index - 1)
-
             engine.sendChannel.pop(params)
-
+            resultCallbackMap.remove(prevKey)?.invoke(params)
         }
-        resultCallbackMap.remove(prevKey)?.invoke(params)
+
     }
-    
+
     fun push(url: String, params: Map<String, Any>?, callback: ResultCallback?) {
         val topActivity = NativeActivityRecord.getTopActivity()
         if (null == topActivity) {

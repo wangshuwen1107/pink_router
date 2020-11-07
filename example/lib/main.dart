@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pink_router/pink.dart';
 import 'module_a.dart';
-import 'main_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,10 +28,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return PinkApp(
-        theme: new ThemeData(
-      primaryColor: Colors.pink[100],
-      //Changing this will change the color of the TabBar
-      accentColor: Colors.pink[100],
-    ));
+      theme: new ThemeData(
+        primaryColor: Colors.pink[100],
+        accentColor: Colors.pink[100],
+      ),
+    );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:pink_router/pink.dart';
-
+import 'package:flutter/material.dart';
 import 'pink_router_wrapper.dart';
 import '../module/pink_module.dart';
 
@@ -13,19 +13,23 @@ class PinkRouter {
     _scheme = scheme;
   }
 
+  static TransitionBuilder builder() {
+    return PinkRouterWrapper.builder();
+  }
+
   static void register(List<PinkModule> modules) {
-    PinkRouterWrapper.getInstance().register(modules);
+    PinkRouterWrapper.register(modules);
   }
 
   static Future<dynamic> push(String url, {Map<String, dynamic> params}) {
-    return PinkRouterWrapper.getInstance().push(url, params);
+    return PinkRouterWrapper.push(url, params);
   }
 
   static void pop<T extends Object>([T result]) {
-    PinkRouterWrapper.getInstance().pop(result);
+    PinkRouterWrapper.pop(result);
   }
 
   static Future<dynamic> call(String url, {Map<String, dynamic> params}) {
-    return PinkRouterWrapper.getInstance().call(url, params);
+    return PinkRouterWrapper.call(url, params);
   }
 }

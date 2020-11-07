@@ -1,50 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:pink_router/src/core/navigator_observer_manager.dart';
 import '../util/pink_util.dart';
 import '../module/pink_module.dart';
 import '../pink_block_type.dart';
 import '../channel/channel_proxy.dart';
 import '../channel/channel_send.dart';
 import '../channel/channel_receive.dart';
+import 'navigator_proxy_widget.dart';
 
 class PinkRouterWrapper {
-  static PinkRouterWrapper _instance;
+  static Map<String, WidgetBuilder> _pageMap = {};
+  static Map<String, MethodBlock> _methodMap = {};
 
-  static GlobalKey<NavigatorState> _key;
+  static List<String> _routerList = [];
 
-  static GlobalKey<NavigatorState> get navigatorKey =>
-      _key ??= GlobalKey<NavigatorState>();
+  static ChannelProxy _channelProxy;
 
-  static NavigatorState get _navigator => navigatorKey.currentState;
+  static SendChannel sendChannel;
 
-  Map<String, WidgetBuilder> _pageMap = {};
-  Map<String, MethodBlock> _methodMap = {};
+  static ReceiveChannel receiveChannel;
 
-  List<String> _routerList = [];
+  static Map<String, WidgetBuilder> get pageBuilder => _pageMap;
 
-  ChannelProxy _channelProxy;
+  static NavigatorProxyWidgetState get navigatorProxyState =>
+      _navigatorProxyKey?.currentState;
 
-  SendChannel sendChannel;
+  static GlobalKey<NavigatorProxyWidgetState> _navigatorProxyKey;
 
-  ReceiveChannel receiveChannel;
+  static NavigatorObserverManager _observerManager;
 
-  Map<String, WidgetBuilder> get routers => _pageMap;
-
-  PinkRouterWrapper._internal() {
-    _channelProxy = ChannelProxy('main');
-    sendChannel = SendChannel(_channelProxy);
-    receiveChannel = ReceiveChannel(_channelProxy);
-  }
-
-  factory PinkRouterWrapper.getInstance() => _getInstance();
-
-  static _getInstance() {
-    if (_instance == null) {
-      _instance = PinkRouterWrapper._internal();
+  static TransitionBuilder builder() {
+    if (null == _channelProxy) {
+      _channelProxy = ChannelProxy('main');
+      sendChannel = SendChannel(_channelProxy);
+      receiveChannel = ReceiveChannel(_channelProxy);
+      sendChannel
+          .registerToNative(_routerList)
+          .then((value) {})
+          .catchError((e) {});
+      _observerManager = NavigatorObserverManager();
     }
-    return _instance;
+    return (context, child) {
+      final navigator = child is Navigator ? child : null;
+      if (!navigator.observers.contains(_observerManager)) {
+        navigator.observers.add(_observerManager);
+      }
+      return NavigatorProxyWidget(
+        key: _navigatorProxyKey ??= GlobalKey<NavigatorProxyWidgetState>(),
+        navigator: navigator,
+        pinkPageObserver: _observerManager,
+      );
+    };
   }
 
-  void register(List<PinkModule> modules) {
+  static void register(List<PinkModule> modules) {
     modules.forEach((module) {
       module.onPageRegister()?.forEach((key, value) {
         _addRoute2Map(key, builder: value);
@@ -53,46 +62,25 @@ class PinkRouterWrapper {
         _addRoute2Map(key, block: value);
       });
     });
-    sendChannel
-        .registerToNative(_routerList)
-        .then((value) {})
-        .catchError((e) {});
   }
 
-  Future<dynamic> onPush(String url, Map<String, dynamic> params) {
+  static Future<T> push<T>(String url, Map<String, dynamic> params) {
     String urlStr = PinkUtil.getUrlKey(url);
     String completeUrlStr = PinkUtil.autoCompleteUrl(url);
     var allParams = PinkUtil.mergeParams(Uri.parse(completeUrlStr).query,
         extraParams: params);
-    WidgetBuilder builder = _pageMap[urlStr];
-    if (null != builder) {
-      var pageRoute = MaterialPageRoute(
-          builder: builder,
-          settings: RouteSettings(name: urlStr, arguments: allParams));
-      return _navigator.push(pageRoute).catchError((error) {});
-    }
-    return Future.value(false);
-  }
-
-  void onPop<T extends Object>([T result]) {
-    _navigator.pop(result);
-  }
-
-  Future<T> push<T>(String url, Map<String, dynamic> params) {
-    String urlStr = PinkUtil.getUrlKey(url);
-    String completeUrlStr = PinkUtil.autoCompleteUrl(url);
-    var allParams = PinkUtil.mergeParams(Uri.parse(completeUrlStr).query,
-        extraParams: params);
-    print("参数 $allParams");
     return sendChannel.push(urlStr, allParams);
   }
 
-  void pop<T extends Object>([T result]) {
-    _navigator.pop(result);
-    sendChannel.pop(result);
+  static void pop<T extends Object>([T result]) {
+    navigatorProxyState.maybePop(true, result).then((value) {
+      if (value) {
+        sendChannel.pop(result);
+      }
+    });
   }
 
-  Future<T> call<T>(String url, Map<String, dynamic> params) {
+  static Future<T> call<T>(String url, Map<String, dynamic> params) {
     String urlStr = PinkUtil.getUrlKey(url);
     String completeUrlStr = PinkUtil.autoCompleteUrl(url);
     var allParams = PinkUtil.mergeParams(Uri.parse(completeUrlStr).query,
@@ -106,7 +94,8 @@ class PinkRouterWrapper {
     return sendChannel.call(url, params);
   }
 
-  void _addRoute2Map(String url, {WidgetBuilder builder, MethodBlock block}) {
+  static void _addRoute2Map(String url,
+      {WidgetBuilder builder, MethodBlock block}) {
     String key = PinkUtil.getUrlKey(url);
     Uri uri = Uri.parse(key);
     assert(PinkUtil.checkUri(uri), "Route Register Error scheme://host/path");

@@ -16,7 +16,6 @@ class ChannelProxy {
       if (methodName.isEmpty) {
         return Future.value(false);
       }
-      print("🐳 Native->Flutter[$methodName] params=${call.arguments}");
       MethodHandler handler = _methodHandlerMap[methodName];
       if (null == handler) {
         return Future.value(false);

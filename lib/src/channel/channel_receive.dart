@@ -1,7 +1,5 @@
 import 'package:pink_router/src/core/pink_router_wrapper.dart';
-
 import 'channel_proxy.dart';
-import '../core/pink_router.dart';
 
 class ReceiveChannel {
   final ChannelProxy _channelProxy;
@@ -21,14 +19,13 @@ class ReceiveChannel {
           stringParams[key] = value;
         }
       });
-      return PinkRouterWrapper.getInstance().onPush(url, stringParams);
+      return PinkRouterWrapper.navigatorProxyState.push(url, stringParams);
     });
   }
 
   onPop() {
     _channelProxy.registerMethodHandler("pop", (args) {
-      PinkRouterWrapper.getInstance().onPop(args);
-      return Future.value(true);
+      return PinkRouterWrapper.navigatorProxyState.maybePop(false, args);
     });
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'main_page.dart';
 
 class ModuleA with PinkModule {
+
   @override
   Map<String, MethodBlock> onMethodRegister() {
     return {
@@ -25,4 +26,5 @@ class ModuleA with PinkModule {
     print("Method A is called $params");
     return "methodA";
   }
+
 }
