@@ -3,6 +3,7 @@ package cn.cheney.flutter.pink.pink_router.channel
 import cn.cheney.flutter.pink.pink_router.ResultCallback
 import cn.cheney.flutter.pink.pink_router.util.Logger
 import io.flutter.plugin.common.MethodChannel
+import java.util.*
 
 class SendChannel(private val channel: ChannelProxy) {
 
@@ -64,21 +65,23 @@ class SendChannel(private val channel: ChannelProxy) {
     }
 
 
-    fun pop(result: Any?, callback: ResultCallback? = null) {
-        Logger.d("本地 入参=$result --->")
-        channel.invokeMethod("pop", result, object : MethodChannel.Result {
+    fun pop(result: Any?, isBackPress: Boolean = false, callback: ResultCallback? = null) {
+        val args = mutableMapOf<String, Any>()
+        result?.let {
+            args["result"] = it
+        }
+        args["isBackPress"] = isBackPress
+        channel.invokeMethod("pop", args, object : MethodChannel.Result {
 
             override fun notImplemented() {
                 callback?.invoke(false)
             }
 
             override fun error(errorCode: String?, errorMessage: String?, errorDetails: Any?) {
-                Logger.d("本地 入参=$result 结果$result errorCode=$errorCode  errorMessage=$errorMessage")
                 callback?.invoke(false)
             }
 
             override fun success(flutterResult: Any?) {
-                Logger.d("本地 入参=$result 结果=$flutterResult")
                 callback?.invoke(flutterResult)
             }
 

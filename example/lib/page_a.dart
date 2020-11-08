@@ -44,8 +44,7 @@ class _PageAState extends State<PageA> {
         ),
       ),
       onWillPop: () async {
-        PinkRouter.pop("onWillPop");
-        print("Page a BACK CALLED  ----");
+        PinkRouter.pop("PageA willPop");
         return false;
       },
     );

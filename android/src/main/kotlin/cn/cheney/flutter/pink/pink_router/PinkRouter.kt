@@ -24,8 +24,8 @@ object PinkRouter {
     }
 
     @JvmStatic
-    fun pop(params: Any? = null) {
-        PinkRouterWrapper.pop(params)
+    fun pop(result: Any? = null) {
+        PinkRouterWrapper.pop(result)
     }
 
     @JvmStatic

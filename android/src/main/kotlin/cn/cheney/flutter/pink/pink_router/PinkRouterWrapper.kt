@@ -1,7 +1,6 @@
 package cn.cheney.flutter.pink.pink_router
 
 import android.content.Context
-import cn.cheney.flutter.pink.pink_router.util.Logger
 import io.flutter.embedding.android.PinkFlutterActivity
 import io.flutter.embedding.android.containerId
 import io.flutter.embedding.android.index
@@ -29,7 +28,7 @@ internal object PinkRouterWrapper {
     }
 
 
-    fun pop(fromFlutter: Boolean,params: Any? = null) {
+    fun pop(result: Any? = null, isBackPress: Boolean = false) {
         val topActivity = NativeActivityRecord.getTopActivity()
         if (null == topActivity || topActivity !is PinkFlutterActivity) {
             return
@@ -38,11 +37,11 @@ internal object PinkRouterWrapper {
         val prevKey: String?
         if (index == 0) {
             prevKey = topActivity.url() + "_" + topActivity.index()
-            engine.sendChannel.pop(params) {
+            engine.sendChannel.pop(result, isBackPress) {
                 val popResult = it as? Boolean
                 if (popResult != null && popResult) {
                     containerStack.remove(topActivity.containerId())
-                    resultCallbackMap.remove(prevKey)?.invoke(params)
+                    resultCallbackMap.remove(prevKey)?.invoke(result)
                     topActivity.finish()
                 }
             }
@@ -53,8 +52,8 @@ internal object PinkRouterWrapper {
             val prevUrl = prevKey?.split("_")?.get(0)
             topActivity.intent.putExtra(PinkFlutterActivity.KEY_URL, prevUrl)
             topActivity.intent.putExtra(PinkFlutterActivity.KEY_INDEX, index - 1)
-            engine.sendChannel.pop(params)
-            resultCallbackMap.remove(prevKey)?.invoke(params)
+            engine.sendChannel.pop(result)
+            resultCallbackMap.remove(prevKey)?.invoke(result)
         }
 
     }

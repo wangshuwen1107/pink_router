@@ -25,7 +25,10 @@ class ReceiveChannel {
 
   onPop() {
     _channelProxy.registerMethodHandler("pop", (args) {
-      return PinkRouterWrapper.navigatorProxyState.canPop(false, args);
+      bool isBackPress = args['isBackPress'] ?? false;
+      dynamic result = args['result'];
+      return PinkRouterWrapper.navigatorProxyState
+          .maybePop(isBackPress: isBackPress, result: result);
     });
   }
 }

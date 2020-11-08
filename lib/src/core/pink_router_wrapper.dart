@@ -73,11 +73,7 @@ class PinkRouterWrapper {
   }
 
   static void pop<T extends Object>([T result]) {
-    navigatorProxyState.canPop(true, result).then((value) {
-      if (value) {
-        sendChannel.pop(result);
-      }
-    });
+    sendChannel.pop(result);
   }
 
   static Future<T> call<T>(String url, Map<String, dynamic> params) {
