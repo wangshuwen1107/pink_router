@@ -75,7 +75,7 @@ class PinkFlutterActivity : FlutterActivity() {
 
     override fun onBackPressed() {
         Logger.d("onBackPressed")
-        PinkRouterWrapper.syncPop()
+        PinkRouterWrapper.pop()
     }
 }
 

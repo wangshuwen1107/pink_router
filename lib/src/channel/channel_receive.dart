@@ -25,7 +25,7 @@ class ReceiveChannel {
 
   onPop() {
     _channelProxy.registerMethodHandler("pop", (args) {
-      return PinkRouterWrapper.navigatorProxyState.maybePop(false, args);
+      return PinkRouterWrapper.navigatorProxyState.canPop(false, args);
     });
   }
 }

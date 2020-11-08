@@ -53,7 +53,7 @@ class ReceiverChannel(private val channel: ChannelProxy) {
 
     private fun onPop() {
         channel.registerMethod("pop") { args, result ->
-            PinkRouterWrapper.syncPop(args)
+            PinkRouterWrapper.pop(args)
             result.success(true)
         }
     }

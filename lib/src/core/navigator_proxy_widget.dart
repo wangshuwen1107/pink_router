@@ -41,13 +41,22 @@ class NavigatorProxyWidgetState extends State<NavigatorProxyWidget> {
     return Future.value(false);
   }
 
-  Future<bool> maybePop<T extends Object>(bool fromFlutter, [T result]) async {
+  Future<bool> canPop<T extends Object>(bool fromFlutter, [T result]) async {
     //判断栈底 页面是否实现了willPop
+    print("Flutter 入参 $result");
     MaterialPageRoute pageRoute = widget.pinkPageObserver.pageRoutes.last;
+    var isWillPop = false;
     if (!fromFlutter) {
-      var isWillPop = await pageRoute.willPop() != RoutePopDisposition.pop;
+      isWillPop = await pageRoute.willPop() != RoutePopDisposition.pop;
+      print("Flutter 入参 $result 结果$isWillPop");
       return isWillPop;
     }
+    print("Flutter 入参 $result 结果 ${!isWillPop}");
+    return true;
+  }
+
+  Future<bool> pop<T extends Object>(bool fromFlutter, [T result]) async {
+    MaterialPageRoute pageRoute = widget.pinkPageObserver.pageRoutes.last;
     final navigatorState = widget.navigator.tryStateOf<NavigatorState>();
     navigatorState?.pop(pageRoute);
     return true;

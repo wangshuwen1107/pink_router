@@ -23,7 +23,6 @@ class PinkApp extends MaterialApp {
     bool showSemanticsDebugger = false,
     bool debugShowCheckedModeBanner = true,
     Map<LogicalKeySet, Intent> shortcuts,
-    Map<LocalKey, ActionFactory> actions,
   }) : super(
             key: key,
             builder: PinkRouter.builder(),
@@ -48,5 +47,5 @@ class PinkApp extends MaterialApp {
             showSemanticsDebugger: showSemanticsDebugger,
             debugShowCheckedModeBanner: debugShowCheckedModeBanner,
             shortcuts: shortcuts,
-            actions: actions);
+  );
 }

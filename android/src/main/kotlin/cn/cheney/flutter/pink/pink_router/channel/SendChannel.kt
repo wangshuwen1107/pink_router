@@ -65,6 +65,7 @@ class SendChannel(private val channel: ChannelProxy) {
 
 
     fun pop(result: Any?, callback: ResultCallback? = null) {
+        Logger.d("本地 入参=$result --->")
         channel.invokeMethod("pop", result, object : MethodChannel.Result {
 
             override fun notImplemented() {
@@ -72,11 +73,12 @@ class SendChannel(private val channel: ChannelProxy) {
             }
 
             override fun error(errorCode: String?, errorMessage: String?, errorDetails: Any?) {
+                Logger.d("本地 入参=$result 结果$result errorCode=$errorCode  errorMessage=$errorMessage")
                 callback?.invoke(false)
             }
 
             override fun success(flutterResult: Any?) {
-                Logger.d("====入参=$result 回参=$flutterResult")
+                Logger.d("本地 入参=$result 结果=$flutterResult")
                 callback?.invoke(flutterResult)
             }
 

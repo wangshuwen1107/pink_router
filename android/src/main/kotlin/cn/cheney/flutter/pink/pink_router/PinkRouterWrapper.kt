@@ -29,7 +29,7 @@ internal object PinkRouterWrapper {
     }
 
 
-    fun syncPop(params: Any? = null) {
+    fun pop(fromFlutter: Boolean,params: Any? = null) {
         val topActivity = NativeActivityRecord.getTopActivity()
         if (null == topActivity || topActivity !is PinkFlutterActivity) {
             return
@@ -37,12 +37,8 @@ internal object PinkRouterWrapper {
         val index = (topActivity).index()
         val prevKey: String?
         if (index == 0) {
-            Logger.d("本地 pop $params")
-
             prevKey = topActivity.url() + "_" + topActivity.index()
-
             engine.sendChannel.pop(params) {
-                Logger.d("本地 Flutter pop $params return $it")
                 val popResult = it as? Boolean
                 if (popResult != null && popResult) {
                     containerStack.remove(topActivity.containerId())

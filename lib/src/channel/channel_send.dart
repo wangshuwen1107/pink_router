@@ -19,8 +19,9 @@ class SendChannel {
     return _channelProxy.invokeMethod("push", argsMap);
   }
 
-  Future<dynamic> pop<T extends Object>([T result]) {
-    return _channelProxy.invokeMethod("pop", result);
+  Future<dynamic> pop<T extends Object>(bool formFlutter, [T result]) {
+    return _channelProxy
+        .invokeMethod("pop", {"result": result, "formFlutter": formFlutter});
   }
 
   Future<T> call<T>(String urlStr, Map<String, dynamic> allParams) {
