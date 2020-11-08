@@ -6,6 +6,7 @@ import android.os.Bundle
 import cn.cheney.flutter.pink.pink_router.PinkRouterWrapper
 import cn.cheney.flutter.pink.pink_router.container.ContainerDelegate
 import cn.cheney.flutter.pink.pink_router.util.Logger
+import java.io.Serializable
 
 
 class PinkFlutterActivity : FlutterActivity() {
@@ -66,16 +67,15 @@ class PinkFlutterActivity : FlutterActivity() {
             intent.putExtra(KEY_URL, url)
             intent.putExtra(KEY_INDEX, index)
             intent.putExtra(KEY_CONTAINER_ID, containerId)
-            params?.let {
-                intent.putExtra(KEY_PARAMS, it as HashMap)
+            if (null != params && params is Serializable) {
+                intent.putExtra(KEY_PARAMS, params)
             }
             return intent
         }
     }
 
     override fun onBackPressed() {
-        Logger.d("onBackPressed")
-        PinkRouterWrapper.pop(null,true)
+        PinkRouterWrapper.pop(null, true)
     }
 }
 

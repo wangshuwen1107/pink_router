@@ -16,14 +16,15 @@ class MainActivity : AppCompatActivity() {
             PinkRouter.push("pink://test/main")
         }
         flutter_a.setOnClickListener {
-            PinkRouter.push("pink://test/flutterA") {
+
+            PinkRouter.push("pink://test/flutterA",
+                    params = mapOf("NativeMainKey" to "NativeMainValue")) {
                 AlertDialog.Builder(this@MainActivity)
                         .setTitle("回传Result")
                         .setMessage("$it")
                         .show()
             }
         }
-
     }
 
 }

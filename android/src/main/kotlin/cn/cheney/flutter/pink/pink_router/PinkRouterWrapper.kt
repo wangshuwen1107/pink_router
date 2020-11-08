@@ -34,9 +34,8 @@ internal object PinkRouterWrapper {
             return
         }
         val index = (topActivity).index()
-        val prevKey: String?
         if (index == 0) {
-            prevKey = topActivity.url() + "_" + topActivity.index()
+            val prevKey = topActivity.url() + "_" + topActivity.index()
             engine.sendChannel.pop(result, isBackPress) {
                 val popResult = it as? Boolean
                 if (popResult != null && popResult) {
@@ -46,16 +45,19 @@ internal object PinkRouterWrapper {
                 }
             }
         } else {
-            val containerPageStack = pageMap[topActivity.containerId()]
-            containerPageStack?.pop()
-            prevKey = containerPageStack?.peek()
-            val prevUrl = prevKey?.split("_")?.get(0)
-            topActivity.intent.putExtra(PinkFlutterActivity.KEY_URL, prevUrl)
-            topActivity.intent.putExtra(PinkFlutterActivity.KEY_INDEX, index - 1)
-            engine.sendChannel.pop(result)
-            resultCallbackMap.remove(prevKey)?.invoke(result)
+            engine.sendChannel.pop(result, isBackPress) {
+                val popResult = it as? Boolean
+                if (popResult != null && popResult) {
+                    val containerPageStack = pageMap[topActivity.containerId()]
+                    containerPageStack?.pop()
+                    val prevKey = containerPageStack?.peek()
+                    val prevUrl = prevKey?.split("_")?.get(0)
+                    topActivity.intent.putExtra(PinkFlutterActivity.KEY_URL, prevUrl)
+                    topActivity.intent.putExtra(PinkFlutterActivity.KEY_INDEX, index - 1)
+                    resultCallbackMap.remove(prevKey)?.invoke(result)
+                }
+            }
         }
-
     }
 
     fun push(url: String, params: Map<String, Any>?, callback: ResultCallback?) {
