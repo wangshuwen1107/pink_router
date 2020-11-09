@@ -41,7 +41,7 @@ class ReceiverChannel(private val channel: ChannelProxy) {
                 return@registerMethod
             }
             if (routerList.indexOf(url) != -1) {
-                PinkRouter.push(url!!, paramsMap) {
+                PinkRouterWrapper.push(url!!, paramsMap) {
                     result.success(it)
                 }
             } else {

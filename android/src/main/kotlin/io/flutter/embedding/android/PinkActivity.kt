@@ -9,13 +9,14 @@ import cn.cheney.flutter.pink.pink_router.util.Logger
 import java.io.Serializable
 
 
-class PinkFlutterActivity : FlutterActivity() {
+class PinkActivity : PinkFlutterActivity() {
 
     private var pinkDelegate: ContainerDelegate = ContainerDelegate(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pinkDelegate.onCreate()
+        Logger.d("PinkActivity onCreate $this")
         PinkRouterWrapper.syncPush(url(), params())
     }
 
@@ -62,7 +63,7 @@ class PinkFlutterActivity : FlutterActivity() {
                       params: Map<String, Any?>?,
                       containerId: Long,
                       index: Int): Intent {
-            val intent = Intent(context, PinkFlutterActivity::class.java)
+            val intent = Intent(context, PinkActivity::class.java)
             intent.putExtra(FlutterActivityLaunchConfigs.EXTRA_CACHED_ENGINE_ID, "main")
             intent.putExtra(KEY_URL, url)
             intent.putExtra(KEY_INDEX, index)
@@ -80,19 +81,19 @@ class PinkFlutterActivity : FlutterActivity() {
 }
 
 fun PinkFlutterActivity.params(): Map<String, Any?>? {
-    return intent.getSerializableExtra(PinkFlutterActivity.KEY_PARAMS) as? Map<String, Any?>
+    return intent.getSerializableExtra(PinkActivity.KEY_PARAMS) as? Map<String, Any?>
 }
 
 
 fun PinkFlutterActivity.index(): Int {
-    return intent.getIntExtra(PinkFlutterActivity.KEY_INDEX, -1)
+    return intent.getIntExtra(PinkActivity.KEY_INDEX, -1)
 }
 
 fun PinkFlutterActivity.containerId(): Long {
-    return intent.getLongExtra(PinkFlutterActivity.KEY_CONTAINER_ID, -1)
+    return intent.getLongExtra(PinkActivity.KEY_CONTAINER_ID, -1)
 }
 
 fun PinkFlutterActivity.url(): String {
-    return intent.getStringExtra(PinkFlutterActivity.KEY_URL)
+    return intent.getStringExtra(PinkActivity.KEY_URL) ?: ""
 }
 

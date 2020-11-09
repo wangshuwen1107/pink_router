@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'navigator_home.dart';
+import 'navigator_default.dart';
 import 'pink_router.dart';
 
 class PinkApp extends MaterialApp {
@@ -27,7 +27,7 @@ class PinkApp extends MaterialApp {
             key: key,
             builder: PinkRouter.builder(),
             initialRoute: '/',
-            routes: {'/': (_) => NavigatorHome()},
+            routes: {'/': (_) => NavigatorDefault()},
             navigatorObservers: [],
             title: title,
             onGenerateTitle: onGenerateTitle,

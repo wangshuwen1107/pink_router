@@ -1,7 +1,7 @@
 package cn.cheney.flutter.pink.pink_router
 
 import android.content.Context
-import io.flutter.embedding.android.PinkFlutterActivity
+import io.flutter.embedding.android.PinkActivity
 import io.flutter.embedding.android.containerId
 import io.flutter.embedding.android.index
 import io.flutter.embedding.android.url
@@ -30,7 +30,7 @@ internal object PinkRouterWrapper {
 
     fun pop(result: Any? = null, isBackPress: Boolean = false) {
         val topActivity = NativeActivityRecord.getTopActivity()
-        if (null == topActivity || topActivity !is PinkFlutterActivity) {
+        if (null == topActivity || topActivity !is PinkActivity) {
             return
         }
         val index = (topActivity).index()
@@ -49,11 +49,10 @@ internal object PinkRouterWrapper {
                 val popResult = it as? Boolean
                 if (popResult != null && popResult) {
                     val containerPageStack = pageMap[topActivity.containerId()]
-                    containerPageStack?.pop()
-                    val prevKey = containerPageStack?.peek()
+                    val prevKey = containerPageStack?.pop()
                     val prevUrl = prevKey?.split("_")?.get(0)
-                    topActivity.intent.putExtra(PinkFlutterActivity.KEY_URL, prevUrl)
-                    topActivity.intent.putExtra(PinkFlutterActivity.KEY_INDEX, index - 1)
+                    topActivity.intent.putExtra(PinkActivity.KEY_URL, prevUrl)
+                    topActivity.intent.putExtra(PinkActivity.KEY_INDEX, index - 1)
                     resultCallbackMap.remove(prevKey)?.invoke(result)
                 }
             }
@@ -69,7 +68,7 @@ internal object PinkRouterWrapper {
         val index: Int
         val containerId: Long
         val key: String
-        if (topActivity is PinkFlutterActivity) {
+        if (topActivity is PinkActivity) {
             index = topActivity.index() + 1
             containerId = topActivity.containerId()
 
@@ -98,7 +97,7 @@ internal object PinkRouterWrapper {
         callback?.let {
             resultCallbackMap[key] = it
         }
-        val intent = PinkFlutterActivity.newIntent(topActivity,
+        val intent = PinkActivity.newIntent(topActivity,
                 url, params, containerId, index)
         topActivity.startActivity(intent)
     }

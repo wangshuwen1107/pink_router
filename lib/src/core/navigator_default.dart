@@ -21,17 +21,16 @@
 
 import 'package:flutter/material.dart';
 
-class NavigatorHome extends StatefulWidget {
-  const NavigatorHome();
+class NavigatorDefault extends StatefulWidget {
+  const NavigatorDefault();
 
   @override
-  _NavigatorHomeState createState() => _NavigatorHomeState();
+  _NavigatorDefaultState createState() => _NavigatorDefaultState();
 }
 
-class _NavigatorHomeState extends State<NavigatorHome> {
+class _NavigatorDefaultState extends State<NavigatorDefault> {
   @override
-  Widget build(BuildContext context) =>
-      Scaffold(
+  Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           brightness: Brightness.light,
           backgroundColor: Colors.white,

@@ -28,7 +28,7 @@ class _MainPageState extends State<MainPage> {
             MaterialButton(
               color: Colors.pink[100],
               child: Text(
-                "Flutter PageA",
+                "Flutter->Flutter页面回传",
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () => _pushFlutterPageA(),
@@ -81,7 +81,7 @@ class _MainPageState extends State<MainPage> {
               ],
             );
           });
-    });
+    }).catchError((e) {});
   }
 
   _invokeMethodA() {

@@ -8,7 +8,7 @@ class Logger {
 
         private const val TAG = "Pink"
 
-        fun d(msg: String) {
+        public fun d(msg: String) {
             Log.d(TAG, msg)
         }
     }

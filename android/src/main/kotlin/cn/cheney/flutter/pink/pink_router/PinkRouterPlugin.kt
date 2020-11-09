@@ -1,6 +1,6 @@
 package cn.cheney.flutter.pink.pink_router
 
-import androidx.annotation.NonNull;
+import androidx.annotation.NonNull
 import cn.cheney.flutter.pink.pink_router.util.Logger
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin

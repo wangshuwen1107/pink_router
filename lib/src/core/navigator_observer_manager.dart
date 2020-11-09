@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pink_router/pink.dart';
 import 'package:pink_router/src/core/pink_router_wrapper.dart';
-import 'navigator_home.dart';
+import 'navigator_default.dart';
 
 class NavigatorObserverManager extends NavigatorObserver {
   final pageRoutes = <MaterialPageRoute>[
     MaterialPageRoute(
-        builder: (context) => const NavigatorHome(),
+        builder: (context) => const NavigatorDefault(),
         settings: RouteSettings(name: "/", arguments: null))
   ];
 
