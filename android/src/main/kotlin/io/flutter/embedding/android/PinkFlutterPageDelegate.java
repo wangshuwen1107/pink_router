@@ -20,7 +20,9 @@ import androidx.lifecycle.Lifecycle;
 import java.util.Arrays;
 
 import cn.cheney.flutter.pink.pink_router.util.Logger;
+import io.flutter.FlutterInjector;
 import io.flutter.Log;
+import io.flutter.app.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.embedding.engine.FlutterEngineCache;
 import io.flutter.embedding.engine.FlutterShellArgs;
@@ -31,23 +33,23 @@ import io.flutter.plugin.platform.PlatformPlugin;
 import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
 
 /**
- * Delegate that implements all Flutter logic that is the same between a {@link PinkFlutterActivity} and
+ * Delegate that implements all Flutter logic that is the same between a {@link FlutterActivity} and
  * a {@link FlutterFragment}.
  *
  * <p><strong>Why does this class exist?</strong>
  *
  * <p>One might ask why an {@code Activity} and {@code Fragment} delegate needs to exist. Given that
  * a {@code Fragment} can be placed within an {@code Activity}, it would make more sense to use a
- * {@link FlutterFragment} within a {@link PinkFlutterActivity}.
+ * {@link FlutterFragment} within a {@link FlutterActivity}.
  *
  * <p>The {@code Fragment} support library adds 100k of binary size to an app, and full-Flutter apps
  * do not otherwise require that binary hit. Therefore, it was concluded that Flutter must provide a
- * {@link PinkFlutterActivity} based on the AOSP {@code Activity}, and an independent {@link
+ * {@link FlutterActivity} based on the AOSP {@code Activity}, and an independent {@link
  * FlutterFragment} for add-to-app developers.
  *
  * <p>If a time ever comes where the inclusion of {@code Fragment}s in a full-Flutter app is no
  * longer deemed an issue, this class should be immediately decomposed between {@link
- * PinkFlutterActivity} and {@link FlutterFragment} and then eliminated.
+ * FlutterActivity} and {@link FlutterFragment} and then eliminated.
  *
  * <p><strong>Caution when modifying this class</strong>
  *
@@ -59,17 +61,16 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
  * and optional references that are very difficult to track.
  *
  * <p>Maintainers of this class should take care to only place code in this delegate that would
- * otherwise be placed in either {@link PinkFlutterActivity} or {@link FlutterFragment}, and in exactly
+ * otherwise be placed in either {@link FlutterActivity} or {@link FlutterFragment}, and in exactly
  * the same form. <strong>Do not use this class as a convenient shortcut for any other
  * behavior.</strong>
  */
 /* package */ final class PinkFlutterPageDelegate {
-
     private static final String TAG = "PinkFlutterPageDelegate";
     private static final String FRAMEWORK_RESTORATION_BUNDLE_KEY = "framework";
     private static final String PLUGINS_RESTORATION_BUNDLE_KEY = "plugins";
 
-    // The PinkFlutterActivity or FlutterFragment that is delegating most of its calls
+    // The FlutterActivity or FlutterFragment that is delegating most of its calls
     // to this PinkFlutterPageDelegate.
     @NonNull
     private Host host;
@@ -228,7 +229,7 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
         }
 
         // Our host did not provide a custom FlutterEngine. Create a FlutterEngine to back our
-        // PinkFlutterView.
+        // FlutterView.
         Log.v(
                 TAG,
                 "No preferred FlutterEngine was provided. Creating a new FlutterEngine for"
@@ -237,7 +238,7 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
                 new FlutterEngine(
                         host.getContext(),
                         host.getFlutterShellArgs().toArray(),
-                        /*automaticallyRegisterPlugins=*/ true,
+                        /*automaticallyRegisterPlugins=*/ false,
                         /*willProvideRestorationData=*/ host.shouldRestoreAndSaveState());
         isFlutterEngineFromHost = false;
     }
@@ -251,16 +252,16 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
      * <p>This method:
      *
      * <ol>
-     *   <li>creates a new {@link PinkFlutterView} in a {@code View} hierarchy
+     *   <li>creates a new {@link FlutterView} in a {@code View} hierarchy
      *   <li>adds a {@link FlutterUiDisplayListener} to it
-     *   <li>attaches a {@link FlutterEngine} to the new {@link PinkFlutterView}
+     *   <li>attaches a {@link FlutterEngine} to the new {@link FlutterView}
      *   <li>returns the new {@code View} hierarchy
      * </ol>
      */
     @NonNull
     View onCreateView(
             LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.v(TAG, "Creating PinkFlutterView.");
+        Log.v(TAG, "Creating FlutterView.");
         ensureAlive();
 
         if (host.getRenderMode() == RenderMode.surface) {
@@ -271,7 +272,7 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
             // Allow our host to customize FlutterSurfaceView, if desired.
             host.onFlutterSurfaceViewCreated(flutterSurfaceView);
 
-            // Create the PinkFlutterView that owns the FlutterSurfaceView.
+            // Create the FlutterView that owns the FlutterSurfaceView.
             flutterView = new PinkFlutterView(host.getActivity(), flutterSurfaceView);
         } else {
             FlutterTextureView flutterTextureView = new FlutterTextureView(host.getActivity());
@@ -279,7 +280,7 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
             // Allow our host to customize FlutterSurfaceView, if desired.
             host.onFlutterTextureViewCreated(flutterTextureView);
 
-            // Create the PinkFlutterView that owns the FlutterTextureView.
+            // Create the FlutterView that owns the FlutterTextureView.
             flutterView = new PinkFlutterView(host.getActivity(), flutterTextureView);
         }
 
@@ -290,7 +291,7 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
         flutterSplashView.setId(View.generateViewId());
         flutterSplashView.displayFlutterViewWithSplash(flutterView, host.provideSplashScreen());
 
-        Log.v(TAG, "Attaching FlutterEngine to PinkFlutterView.");
+        Log.v(TAG, "Attaching FlutterEngine to FlutterView.");
         flutterView.attachToFlutterEngine(flutterEngine);
 
         return flutterSplashView;
@@ -334,9 +335,9 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
     }
 
     /**
-     * Starts running Dart within the PinkFlutterView for the first time.
+     * Starts running Dart within the FlutterView for the first time.
      *
-     * <p>Reloading/restarting Dart within a given PinkFlutterView is not supported. If this method is
+     * <p>Reloading/restarting Dart within a given FlutterView is not supported. If this method is
      * invoked while Dart is already executing then it does nothing.
      *
      * <p>{@code flutterEngine} must be non-null when invoking this method.
@@ -367,10 +368,15 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
             flutterEngine.getNavigationChannel().setInitialRoute(host.getInitialRoute());
         }
 
+        String appBundlePathOverride = host.getAppBundlePath();
+        if (appBundlePathOverride == null || appBundlePathOverride.isEmpty()) {
+            appBundlePathOverride = FlutterInjector.instance().flutterLoader().findAppBundlePath();
+        }
+
         // Configure the Dart entrypoint and execute it.
         DartExecutor.DartEntrypoint entrypoint =
                 new DartExecutor.DartEntrypoint(
-                        host.getAppBundlePath(), host.getDartEntrypointFunctionName());
+                        appBundlePathOverride, host.getDartEntrypointFunctionName());
         flutterEngine.getDartExecutor().executeDartEntrypoint(entrypoint);
     }
 
@@ -391,7 +397,7 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
                 flutterEngine.getActivityControlSurface().attachToActivity(host.getActivity(), host.getLifecycle());
                 Logger.Companion.d("attach " + host.getActivity());
                 if (host.shouldAttachEngineToActivity() && flutterView != null) {
-                    //flutterView.reattachToFlutterEngine();
+                    flutterView.reattachToFlutterEngine();
                 }
             }
         }
@@ -447,7 +453,7 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
      * <ol>
      *   <li>This method notifies the running Flutter app that it is "paused" as per the Flutter app
      *       lifecycle.
-     *   <li>Detaches this delegate's {@link FlutterEngine} from this delegate's {@link PinkFlutterView}.
+     *   <li>Detaches this delegate's {@link FlutterEngine} from this delegate's {@link FlutterView}.
      * </ol>
      */
     void onStop() {
@@ -459,7 +465,7 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
     /**
      * Invoke this from {@code Activity#onDestroy()} or {@code Fragment#onDestroyView()}.
      *
-     * <p>This method removes this delegate's {@link PinkFlutterView}'s {@link FlutterUiDisplayListener}.
+     * <p>This method removes this delegate's {@link FlutterView}'s {@link FlutterUiDisplayListener}.
      */
     void onDestroyView() {
         Log.v(TAG, "onDestroyView()");
@@ -705,7 +711,7 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
     }
 
     /**
-     * The {@link PinkFlutterActivity} or {@link FlutterFragment} that owns this {@code
+     * The {@link FlutterActivity} or {@link FlutterFragment} that owns this {@code
      * PinkFlutterPageDelegate}.
      */
     /* package */ interface Host
@@ -772,14 +778,14 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
         String getInitialRoute();
 
         /**
-         * Returns the {@link RenderMode} used by the {@link PinkFlutterView} that displays the {@link
+         * Returns the {@link RenderMode} used by the {@link FlutterView} that displays the {@link
          * FlutterEngine}'s content.
          */
         @NonNull
         RenderMode getRenderMode();
 
         /**
-         * Returns the {@link TransparencyMode} used by the {@link PinkFlutterView} that displays the {@link
+         * Returns the {@link TransparencyMode} used by the {@link FlutterView} that displays the {@link
          * FlutterEngine}'s content.
          */
         @NonNull
@@ -789,7 +795,7 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
         SplashScreen provideSplashScreen();
 
         /**
-         * Returns the {@link FlutterEngine} that should be rendered to a {@link PinkFlutterView}.
+         * Returns the {@link FlutterEngine} that should be rendered to a {@link FlutterView}.
          *
          * <p>If {@code null} is returned, a new {@link FlutterEngine} will be created automatically.
          */
@@ -826,8 +832,8 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
          * initially instantiated.
          *
          * <p>This method is only invoked if the {@link
-         * PinkFlutterView.RenderMode} is set to {@link
-         * PinkFlutterView.RenderMode#surface}. Otherwise, {@link
+         * io.flutter.embedding.android.FlutterView.RenderMode} is set to {@link
+         * io.flutter.embedding.android.FlutterView.RenderMode#surface}. Otherwise, {@link
          * #onFlutterTextureViewCreated(FlutterTextureView)} is invoked.
          *
          * <p>This method is invoked before the given {@link FlutterSurfaceView} is attached to the
@@ -841,8 +847,8 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
          * initially instantiated.
          *
          * <p>This method is only invoked if the {@link
-         * PinkFlutterView.RenderMode} is set to {@link
-         * PinkFlutterView.RenderMode#texture}. Otherwise, {@link
+         * io.flutter.embedding.android.FlutterView.RenderMode} is set to {@link
+         * io.flutter.embedding.android.FlutterView.RenderMode#texture}. Otherwise, {@link
          * #onFlutterSurfaceViewCreated(FlutterSurfaceView)} is invoked.
          *
          * <p>This method is invoked before the given {@link FlutterTextureView} is attached to the
@@ -852,12 +858,12 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
         void onFlutterTextureViewCreated(@NonNull FlutterTextureView flutterTextureView);
 
         /**
-         * Invoked by this delegate when its {@link PinkFlutterView} starts painting pixels.
+         * Invoked by this delegate when its {@link FlutterView} starts painting pixels.
          */
         void onFlutterUiDisplayed();
 
         /**
-         * Invoked by this delegate when its {@link PinkFlutterView} stops painting pixels.
+         * Invoked by this delegate when its {@link FlutterView} stops painting pixels.
          */
         void onFlutterUiNoLongerDisplayed();
 

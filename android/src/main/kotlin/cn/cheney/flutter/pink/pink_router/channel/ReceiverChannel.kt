@@ -4,6 +4,10 @@ import android.text.TextUtils
 import cn.cheney.flutter.pink.pink_router.NativeActivityRecord
 import cn.cheney.flutter.pink.pink_router.PinkRouter
 import cn.cheney.flutter.pink.pink_router.PinkRouterWrapper
+import io.flutter.embedding.android.PinkActivity
+import io.flutter.embedding.android.containerId
+import io.flutter.embedding.android.index
+import io.flutter.embedding.android.url
 
 class ReceiverChannel(private val channel: ChannelProxy) {
 

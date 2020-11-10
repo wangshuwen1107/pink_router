@@ -3,6 +3,7 @@ package io.flutter.embedding.android
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import cn.cheney.flutter.pink.pink_router.PinkRouterWrapper
 import cn.cheney.flutter.pink.pink_router.container.ContainerDelegate
 import cn.cheney.flutter.pink.pink_router.util.Logger
@@ -11,7 +12,7 @@ import java.io.Serializable
 
 class PinkActivity : PinkFlutterActivity() {
 
-    private var pinkDelegate: ContainerDelegate = ContainerDelegate(this)
+    private var pinkDelegate: ContainerDelegate = ContainerDelegate()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +52,13 @@ class PinkActivity : PinkFlutterActivity() {
         pinkDelegate.onDestroy()
     }
 
+
+    override fun onBackPressed() {
+        Logger.d("onBackPressed is called ")
+        PinkRouterWrapper.pop(null, true)
+    }
+
+
     companion object {
         const val KEY_URL = "url"
         const val KEY_PARAMS = "params"
@@ -58,6 +66,7 @@ class PinkActivity : PinkFlutterActivity() {
         const val KEY_CONTAINER_ID = "containerId"
         const val KEY_INIT_ROUTER = FlutterActivityLaunchConfigs.EXTRA_INITIAL_ROUTE
 
+        @JvmStatic
         fun newIntent(context: Context,
                       url: String,
                       params: Map<String, Any?>?,
@@ -75,25 +84,22 @@ class PinkActivity : PinkFlutterActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        PinkRouterWrapper.pop(null, true)
-    }
 }
 
-fun PinkFlutterActivity.params(): Map<String, Any?>? {
+fun PinkActivity.params(): Map<String, Any?>? {
     return intent.getSerializableExtra(PinkActivity.KEY_PARAMS) as? Map<String, Any?>
 }
 
 
-fun PinkFlutterActivity.index(): Int {
+fun PinkActivity.index(): Int {
     return intent.getIntExtra(PinkActivity.KEY_INDEX, -1)
 }
 
-fun PinkFlutterActivity.containerId(): Long {
+fun PinkActivity.containerId(): Long {
     return intent.getLongExtra(PinkActivity.KEY_CONTAINER_ID, -1)
 }
 
-fun PinkFlutterActivity.url(): String {
+fun PinkActivity.url(): String {
     return intent.getStringExtra(PinkActivity.KEY_URL) ?: ""
 }
 

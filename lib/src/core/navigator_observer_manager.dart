@@ -27,8 +27,7 @@ class NavigatorObserverManager extends NavigatorObserver {
   void didPop(Route route, Route previousRoute) {
     super.didPop(route, previousRoute);
     if (route is MaterialPageRoute) {
-      print(
-          "🐳 Flutter didPop url=${route.settings.name} params=${route.settings.arguments}");
+      print("🐳 Flutter didPop url=${route.settings.name} params=${route.settings.arguments}");
       pageRoutes.removeLast();
     }
   }

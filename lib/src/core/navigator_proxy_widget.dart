@@ -47,12 +47,14 @@ class NavigatorProxyWidgetState extends State<NavigatorProxyWidget> {
     var isWillPop = false;
     if (isBackPress) {
       isWillPop = await pageRoute.willPop() == RoutePopDisposition.pop;
-    } else {
+    }
+    bool needPop = !isBackPress || isWillPop;
+    if (needPop) {
       final navigatorState = widget.navigator.tryStateOf<NavigatorState>();
       navigatorState?.pop(pageRoute);
     }
     print("maybePop is end isBackPress=$isBackPress result=$result "
-        "return=${!isBackPress || isWillPop} ");
-    return !isBackPress || isWillPop;
+        "return=$needPop ");
+    return needPop;
   }
 }

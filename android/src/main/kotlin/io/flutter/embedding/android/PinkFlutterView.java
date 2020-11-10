@@ -696,9 +696,7 @@ public class PinkFlutterView extends FrameLayout implements MouseCursorPlugin.Mo
         if (!isAttachedToFlutterEngine()) {
             return super.onKeyUp(keyCode, event);
         }
-
-        androidKeyProcessor.onKeyUp(event);
-        return super.onKeyUp(keyCode, event);
+        return androidKeyProcessor.onKeyUp(event) || super.onKeyUp(keyCode, event);
     }
 
     /**
@@ -718,8 +716,7 @@ public class PinkFlutterView extends FrameLayout implements MouseCursorPlugin.Mo
             return super.onKeyDown(keyCode, event);
         }
 
-        androidKeyProcessor.onKeyDown(event);
-        return super.onKeyDown(keyCode, event);
+        return androidKeyProcessor.onKeyDown(event) || super.onKeyDown(keyCode, event);
     }
 
     /**

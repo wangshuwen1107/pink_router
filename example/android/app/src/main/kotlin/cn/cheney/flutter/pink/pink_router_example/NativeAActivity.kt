@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import cn.cheney.flutter.pink.pink_router.ResultCallback
+import cn.cheney.flutter.pink.pink_router.util.Logger
 import kotlinx.android.synthetic.main.activity_page_a.*
 import java.io.Serializable
 import java.util.*

@@ -26,15 +26,13 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 
-import java.lang.reflect.Method;
-
 import io.flutter.Log;
 import io.flutter.embedding.android.FlutterActivityLaunchConfigs.BackgroundMode;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.embedding.engine.FlutterShellArgs;
 import io.flutter.embedding.engine.plugins.activity.ActivityControlSurface;
+import io.flutter.embedding.engine.plugins.util.GeneratedPluginRegister;
 import io.flutter.plugin.platform.PlatformPlugin;
-import io.flutter.view.FlutterMain;
 
 import static io.flutter.embedding.android.FlutterActivityLaunchConfigs.DART_ENTRYPOINT_META_DATA_KEY;
 import static io.flutter.embedding.android.FlutterActivityLaunchConfigs.DEFAULT_BACKGROUND_MODE;
@@ -52,12 +50,12 @@ import static io.flutter.embedding.android.FlutterActivityLaunchConfigs.SPLASH_S
 /**
  * {@code Activity} which displays a fullscreen Flutter UI.
  *
- * <p>{@code PinkFlutterActivity} is the simplest and most direct way to integrate Flutter within an
+ * <p>{@code FlutterActivity} is the simplest and most direct way to integrate Flutter within an
  * Android app.
  *
- * <p><strong>PinkFlutterActivity responsibilities</strong>
+ * <p><strong>FlutterActivity responsibilities</strong>
  *
- * <p>{@code PinkFlutterActivity} maintains the following responsibilities:
+ * <p>{@code FlutterActivity} maintains the following responsibilities:
  *
  * <ul>
  *   <li>Displays an Android launch screen.
@@ -73,7 +71,7 @@ import static io.flutter.embedding.android.FlutterActivityLaunchConfigs.SPLASH_S
  * <p><strong>Dart entrypoint, initial route, and app bundle path</strong>
  *
  * <p>The Dart entrypoint executed within this {@code Activity} is "main()" by default. To change
- * the entrypoint that a {@code PinkFlutterActivity} executes, subclass {@code PinkFlutterActivity} and
+ * the entrypoint that a {@code FlutterActivity} executes, subclass {@code FlutterActivity} and
  * override {@link #getDartEntrypointFunctionName()}. For non-main Dart entrypoints to not be
  * tree-shaken away, you need to annotate those functions with {@code @pragma('vm:entry-point')} in
  * Dart.
@@ -86,7 +84,7 @@ import static io.flutter.embedding.android.FlutterActivityLaunchConfigs.SPLASH_S
  * NewEngineIntentBuilder#initialRoute}.
  *
  * <p>The app bundle path, Dart entrypoint, and initial route can also be controlled in a subclass
- * of {@code PinkFlutterActivity} by overriding their respective methods:
+ * of {@code FlutterActivity} by overriding their respective methods:
  *
  * <ul>
  *   <li>{@link #getAppBundlePath()}
@@ -99,8 +97,8 @@ import static io.flutter.embedding.android.FlutterActivityLaunchConfigs.SPLASH_S
  *
  * <p><strong>Using a cached FlutterEngine</strong>
  *
- * <p>{@code PinkFlutterActivity} can be used with a cached {@link FlutterEngine} instead of creating a
- * new one. Use {@link #withCachedEngine(String)} to build a {@code PinkFlutterActivity} {@code Intent}
+ * <p>{@code FlutterActivity} can be used with a cached {@link FlutterEngine} instead of creating a
+ * new one. Use {@link #withCachedEngine(String)} to build a {@code FlutterActivity} {@code Intent}
  * that is configured to use an existing, cached {@link FlutterEngine}. {@link
  * io.flutter.embedding.engine.FlutterEngineCache} is the cache that is used to obtain a given
  * cached {@link FlutterEngine}. You must create and put a {@link FlutterEngine} into the {@link
@@ -120,7 +118,7 @@ import static io.flutter.embedding.android.FlutterActivityLaunchConfigs.SPLASH_S
  * <p>
  *
  * <ul>
- *   <li>When {@code PinkFlutterActivity} is the first {@code Activity} displayed by the app, because
+ *   <li>When {@code FlutterActivity} is the first {@code Activity} displayed by the app, because
  *       pre-warming a {@link FlutterEngine} would have no impact in this situation.
  *   <li>When you are unsure when/if you will need to display a Flutter experience.
  * </ul>
@@ -139,21 +137,21 @@ import static io.flutter.embedding.android.FlutterActivityLaunchConfigs.SPLASH_S
  * FlutterEngineCache.getInstance().put("my_engine", flutterEngine);
  * }</pre>
  *
- * <p><strong>Alternatives to PinkFlutterActivity</strong>
+ * <p><strong>Alternatives to FlutterActivity</strong>
  *
  * <p>If Flutter is needed in a location that cannot use an {@code Activity}, consider using a
  * {@link FlutterFragment}. Using a {@link FlutterFragment} requires forwarding some calls from an
  * {@code Activity} to the {@link FlutterFragment}.
  *
  * <p>If Flutter is needed in a location that can only use a {@code View}, consider using a {@link
- * PinkFlutterView}. Using a {@link PinkFlutterView} requires forwarding some calls from an {@code
+ * FlutterView}. Using a {@link FlutterView} requires forwarding some calls from an {@code
  * Activity}, as well as forwarding lifecycle calls from an {@code Activity} or a {@code Fragment}.
  *
  * <p><strong>Launch Screen and Splash Screen</strong>
  *
- * <p>{@code PinkFlutterActivity} supports the display of an Android "launch screen" as well as a
+ * <p>{@code FlutterActivity} supports the display of an Android "launch screen" as well as a
  * Flutter-specific "splash screen". The launch screen is displayed while the Android application
- * loads. It is only applicable if {@code PinkFlutterActivity} is the first {@code Activity} displayed
+ * loads. It is only applicable if {@code FlutterActivity} is the first {@code Activity} displayed
  * upon loading the app. After the launch screen passes, a splash screen is optionally displayed.
  * The splash screen is displayed for as long as it takes Flutter to initialize and render its first
  * frame.
@@ -171,8 +169,8 @@ import static io.flutter.embedding.android.FlutterActivityLaunchConfigs.SPLASH_S
  * channels to instruct Android to do so at the appropriate time. This will avoid any jarring visual
  * changes during app startup.
  *
- * <p>In the AndroidManifest.xml, set the theme of {@code PinkFlutterActivity} to the defined launch
- * theme. In the metadata section for {@code PinkFlutterActivity}, defined the following reference to
+ * <p>In the AndroidManifest.xml, set the theme of {@code FlutterActivity} to the defined launch
+ * theme. In the metadata section for {@code FlutterActivity}, defined the following reference to
  * your normal theme:
  *
  * <p>{@code <meta-data android:name="io.flutter.embedding.android.NormalTheme"
@@ -182,30 +180,30 @@ import static io.flutter.embedding.android.FlutterActivityLaunchConfigs.SPLASH_S
  * screen until the Android application is initialized.
  *
  * <p>Flutter also requires initialization time. To specify a splash screen for Flutter
- * initialization, subclass {@code PinkFlutterActivity} and override {@link #provideSplashScreen()}. See
+ * initialization, subclass {@code FlutterActivity} and override {@link #provideSplashScreen()}. See
  * {@link SplashScreen} for details on implementing a splash screen.
  *
  * <p>Flutter ships with a splash screen that automatically displays the exact same {@code
  * windowBackground} as the launch theme discussed previously. To use that splash screen, include
- * the following metadata in AndroidManifest.xml for this {@code PinkFlutterActivity}:
+ * the following metadata in AndroidManifest.xml for this {@code FlutterActivity}:
  *
  * <p>{@code <meta-data android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
  * android:value="true" /> }
  *
  * <p><strong>Alternative Activity</strong> {@link FlutterFragmentActivity} is also available, which
- * is similar to {@code PinkFlutterActivity} but it extends {@code FragmentActivity}. You should use
- * {@code PinkFlutterActivity}, if possible, but if you need a {@code FragmentActivity} then you should
+ * is similar to {@code FlutterActivity} but it extends {@code FragmentActivity}. You should use
+ * {@code FlutterActivity}, if possible, but if you need a {@code FragmentActivity} then you should
  * use {@link FlutterFragmentActivity}.
  */
 // A number of methods in this class have the same implementation as FlutterFragmentActivity. These
 // methods are duplicated for readability purposes. Be sure to replicate any change in this class in
 // FlutterFragmentActivity, too.
-public class PinkFlutterActivity extends Activity implements PinkFlutterPageDelegate.Host, LifecycleOwner {
-   
-    private static final String TAG = "PinkFlutterActivity";
+public class PinkFlutterActivity extends Activity
+        implements PinkFlutterPageDelegate.Host, LifecycleOwner {
+    private static final String TAG = "FlutterActivity";
 
     /**
-     * Creates an {@link Intent} that launches a {@code PinkFlutterActivity}, which creates a {@link
+     * Creates an {@link Intent} that launches a {@code FlutterActivity}, which creates a {@link
      * FlutterEngine} that executes a {@code main()} Dart entrypoint, and displays the "/" route as
      * Flutter's initial route.
      *
@@ -219,7 +217,7 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
 
     /**
      * Creates an {@link NewEngineIntentBuilder}, which can be used to configure an {@link Intent} to
-     * launch a {@code PinkFlutterActivity} that internally creates a new {@link FlutterEngine} using the
+     * launch a {@code FlutterActivity} that internally creates a new {@link FlutterEngine} using the
      * desired Dart entrypoint, initial route, etc.
      */
     @NonNull
@@ -228,7 +226,7 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
     }
 
     /**
-     * Builder to create an {@code Intent} that launches a {@code PinkFlutterActivity} with a new {@link
+     * Builder to create an {@code Intent} that launches a {@code FlutterActivity} with a new {@link
      * FlutterEngine} and the desired configuration.
      */
     public static class NewEngineIntentBuilder {
@@ -238,11 +236,11 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
 
         /**
          * Constructor that allows this {@code NewEngineIntentBuilder} to be used by subclasses of
-         * {@code PinkFlutterActivity}.
+         * {@code FlutterActivity}.
          *
-         * <p>Subclasses of {@code PinkFlutterActivity} should provide their own static version of {@link
+         * <p>Subclasses of {@code FlutterActivity} should provide their own static version of {@link
          * #withNewEngine()}, which returns an instance of {@code NewEngineIntentBuilder} constructed
-         * with a {@code Class} reference to the {@code PinkFlutterActivity} subclass, e.g.:
+         * with a {@code Class} reference to the {@code FlutterActivity} subclass, e.g.:
          *
          * <p>{@code return new NewEngineIntentBuilder(MyFlutterActivity.class); }
          */
@@ -261,18 +259,18 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
         }
 
         /**
-         * The mode of {@code PinkFlutterActivity}'s background, either {@link BackgroundMode#opaque} or
+         * The mode of {@code FlutterActivity}'s background, either {@link BackgroundMode#opaque} or
          * {@link BackgroundMode#transparent}.
          *
          * <p>The default background mode is {@link BackgroundMode#opaque}.
          *
          * <p>Choosing a background mode of {@link BackgroundMode#transparent} will configure the inner
-         * {@link PinkFlutterView} of this {@code PinkFlutterActivity} to be configured with a {@link
+         * {@link FlutterView} of this {@code FlutterActivity} to be configured with a {@link
          * FlutterTextureView} to support transparency. This choice has a non-trivial performance
          * impact. A transparent background should only be used if it is necessary for the app design
          * being implemented.
          *
-         * <p>A {@code PinkFlutterActivity} that is configured with a background mode of {@link
+         * <p>A {@code FlutterActivity} that is configured with a background mode of {@link
          * BackgroundMode#transparent} must have a theme applied to it that includes the following
          * property: {@code <item name="android:windowIsTranslucent">true</item>}.
          */
@@ -283,7 +281,7 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
         }
 
         /**
-         * Creates and returns an {@link Intent} that will launch a {@code PinkFlutterActivity} with the
+         * Creates and returns an {@link Intent} that will launch a {@code FlutterActivity} with the
          * desired configuration.
          */
         @NonNull
@@ -297,7 +295,7 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
 
     /**
      * Creates a {@link CachedEngineIntentBuilder}, which can be used to configure an {@link Intent}
-     * to launch a {@code PinkFlutterActivity} that internally uses an existing {@link FlutterEngine} that
+     * to launch a {@code FlutterActivity} that internally uses an existing {@link FlutterEngine} that
      * is cached in {@link io.flutter.embedding.engine.FlutterEngineCache}.
      */
     public static CachedEngineIntentBuilder withCachedEngine(@NonNull String cachedEngineId) {
@@ -305,7 +303,7 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
     }
 
     /**
-     * Builder to create an {@code Intent} that launches a {@code PinkFlutterActivity} with an existing
+     * Builder to create an {@code Intent} that launches a {@code FlutterActivity} with an existing
      * {@link FlutterEngine} that is cached in {@link io.flutter.embedding.engine.FlutterEngineCache}.
      */
     public static class CachedEngineIntentBuilder {
@@ -316,11 +314,9 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
 
         /**
          * Constructor that allows this {@code CachedEngineIntentBuilder} to be used by subclasses of
-         * {@code PinkFlutterActivity}.
+         * {@code FlutterActivity}.
          *
-         * <p>Subclasses of {@code PinkFlutterActivity} should provide their own static version of {@link
-         * #withCachedEngine(String)}, which returns an instance of {@code CachedEngineIntentBuilder}
-         * constructed with a {@code Class} reference to the {@code PinkFlutterActivity} subclass, e.g.:
+         * <p>Subclasses of {@code FlutterActivity} should provide their own static version of {@link
          *
          * <p>{@code return new CachedEngineIntentBuilder(MyFlutterActivity.class, engineId); }
          */
@@ -332,7 +328,7 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
 
         /**
          * Returns true if the cached {@link FlutterEngine} should be destroyed and removed from the
-         * cache when this {@code PinkFlutterActivity} is destroyed.
+         * cache when this {@code FlutterActivity} is destroyed.
          *
          * <p>The default value is {@code false}.
          */
@@ -342,18 +338,18 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
         }
 
         /**
-         * The mode of {@code PinkFlutterActivity}'s background, either {@link BackgroundMode#opaque} or
+         * The mode of {@code FlutterActivity}'s background, either {@link BackgroundMode#opaque} or
          * {@link BackgroundMode#transparent}.
          *
          * <p>The default background mode is {@link BackgroundMode#opaque}.
          *
          * <p>Choosing a background mode of {@link BackgroundMode#transparent} will configure the inner
-         * {@link PinkFlutterView} of this {@code PinkFlutterActivity} to be configured with a {@link
+         * {@link FlutterView} of this {@code FlutterActivity} to be configured with a {@link
          * FlutterTextureView} to support transparency. This choice has a non-trivial performance
          * impact. A transparent background should only be used if it is necessary for the app design
          * being implemented.
          *
-         * <p>A {@code PinkFlutterActivity} that is configured with a background mode of {@link
+         * <p>A {@code FlutterActivity} that is configured with a background mode of {@link
          * BackgroundMode#transparent} must have a theme applied to it that includes the following
          * property: {@code <item name="android:windowIsTranslucent">true</item>}.
          */
@@ -364,7 +360,7 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
         }
 
         /**
-         * Creates and returns an {@link Intent} that will launch a {@code PinkFlutterActivity} with the
+         * Creates and returns an {@link Intent} that will launch a {@code FlutterActivity} with the
          * desired configuration.
          */
         @NonNull
@@ -376,12 +372,11 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
         }
     }
 
-    // Delegate that runs all lifecycle and OS hook logic that is common between
-    // PinkFlutterActivity and FlutterFragment. See the PinkFlutterPageDelegate
-    // implementation for details about why it exists.
-    @VisibleForTesting protected PinkFlutterPageDelegate delegate;
+    @VisibleForTesting
+    protected PinkFlutterPageDelegate delegate;
 
-    @NonNull private LifecycleRegistry lifecycle;
+    @NonNull
+    private LifecycleRegistry lifecycle;
 
     public PinkFlutterActivity() {
         lifecycle = new LifecycleRegistry(this);
@@ -392,7 +387,7 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
      * Activity through any lifecycle events, because JVM tests cannot handle executing any lifecycle
      * methods, at the time of writing this.
      *
-     * <p>The testing infrastructure should be upgraded to make PinkFlutterActivity tests easy to write
+     * <p>The testing infrastructure should be upgraded to make FlutterActivity tests easy to write
      * while exercising real lifecycle methods. At such a time, this method should be removed.
      */
     // TODO(mattcarroll): remove this when tests allow for it
@@ -410,7 +405,7 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
 
         lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_CREATE);
 
-        delegate = new PinkFlutterPageDelegate(this);
+        delegate = new PinkFlutterPageDelegate(PinkFlutterActivity.this);
         delegate.onAttach(this);
         delegate.onActivityCreated(savedInstanceState);
 
@@ -432,13 +427,13 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
      *   <li>In the launch screen theme, set the "windowBackground" property to a {@code Drawable} of
      *       your choice.
      *   <li>In the normal theme, customize however you'd like.
-     *   <li>In the AndroidManifest.xml, set the theme of your {@code PinkFlutterActivity} to your launch
+     *   <li>In the AndroidManifest.xml, set the theme of your {@code FlutterActivity} to your launch
      *       theme.
-     *   <li>Add a {@code <meta-data>} property to your {@code PinkFlutterActivity} with a name of
+     *   <li>Add a {@code <meta-data>} property to your {@code FlutterActivity} with a name of
      *       "io.flutter.embedding.android.NormalTheme" and set the resource to your normal theme,
      *       e.g., {@code android:resource="@style/MyNormalTheme}.
      * </ol>
-     *
+     * <p>
      * With the above settings, your launch theme will be used when loading the app, and then the
      * theme will be switched to your normal theme once the app has initialized.
      *
@@ -463,7 +458,7 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
         } catch (PackageManager.NameNotFoundException exception) {
             Log.e(
                     TAG,
-                    "Could not read meta-data for PinkFlutterActivity. Using the launch theme as normal theme.");
+                    "Could not read meta-data for FlutterActivity. Using the launch theme as normal theme.");
         }
     }
 
@@ -548,11 +543,6 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
         delegate.onResume();
     }
 
-    public void resume() {
-        lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_RESUME);
-        delegate.onResume();
-    }
-
     @Override
     public void onPostResume() {
         super.onPostResume();
@@ -621,44 +611,24 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
         delegate.onTrimMemory(level);
     }
 
-    /**
-     * {@link PinkFlutterPageDelegate.Host} method that is used by {@link
-     * PinkFlutterPageDelegate} to obtain a {@code Context} reference as needed.
-     */
     @Override
     @NonNull
     public Context getContext() {
         return this;
     }
 
-    /**
-     * {@link PinkFlutterPageDelegate.Host} method that is used by {@link
-     * PinkFlutterPageDelegate} to obtain an {@code Activity} reference as needed. This
-     * reference is used by the delegate to instantiate a {@link PinkFlutterView}, a {@link
-     * PlatformPlugin}, and to determine if the {@code Activity} is changing configurations.
-     */
     @Override
     @NonNull
     public Activity getActivity() {
         return this;
     }
 
-    /**
-     * {@link PinkFlutterPageDelegate.Host} method that is used by {@link
-     * PinkFlutterPageDelegate} to obtain a {@code Lifecycle} reference as needed. This
-     * reference is used by the delegate to provide Flutter plugins with access to lifecycle events.
-     */
     @Override
     @NonNull
     public Lifecycle getLifecycle() {
         return lifecycle;
     }
 
-    /**
-     * {@link PinkFlutterPageDelegate.Host} method that is used by {@link
-     * PinkFlutterPageDelegate} to obtain Flutter shell arguments when initializing
-     * Flutter.
-     */
     @NonNull
     @Override
     public FlutterShellArgs getFlutterShellArgs() {
@@ -667,7 +637,7 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
 
     /**
      * Returns the ID of a statically cached {@link FlutterEngine} to use within this {@code
-     * PinkFlutterActivity}, or {@code null} if this {@code PinkFlutterActivity} does not want to use a cached
+     * FlutterActivity}, or {@code null} if this {@code FlutterActivity} does not want to use a cached
      * {@link FlutterEngine}.
      */
     @Override
@@ -677,11 +647,11 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
     }
 
     /**
-     * Returns false if the {@link FlutterEngine} backing this {@code PinkFlutterActivity} should outlive
-     * this {@code PinkFlutterActivity}, or true to be destroyed when the {@code PinkFlutterActivity} is
+     * Returns false if the {@link FlutterEngine} backing this {@code FlutterActivity} should outlive
+     * this {@code FlutterActivity}, or true to be destroyed when the {@code FlutterActivity} is
      * destroyed.
      *
-     * <p>The default value is {@code true} in cases where {@code PinkFlutterActivity} created its own
+     * <p>The default value is {@code true} in cases where {@code FlutterActivity} created its own
      * {@link FlutterEngine}, and {@code false} in cases where a cached {@link FlutterEngine} was
      * provided.
      */
@@ -704,7 +674,7 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
      *
      * <p>This preference can be controlled by setting a {@code <meta-data>} called {@link
      * FlutterActivityLaunchConfigs#DART_ENTRYPOINT_META_DATA_KEY} within the Android manifest
-     * definition for this {@code PinkFlutterActivity}.
+     * definition for this {@code FlutterActivity}.
      *
      * <p>Subclasses may override this method to directly control the Dart entrypoint.
      */
@@ -734,7 +704,7 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
      *       FlutterActivityLaunchConfigs#INITIAL_ROUTE_META_DATA_KEY} for this {@code Activity} in
      *       the Android manifest.
      * </ol>
-     *
+     * <p>
      * If both preferences are set, the {@code Intent} preference takes priority.
      *
      * <p>The reason that a {@code <meta-data>} preference is supported is because this {@code
@@ -762,12 +732,13 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
     }
 
     /**
-     * The path to the bundle that contains this Flutter app's resources, e.g., Dart code snapshots.
+     * A custom path to the bundle that contains this Flutter app's resources, e.g., Dart code
+     * snapshots.
      *
-     * <p>When this {@code PinkFlutterActivity} is run by Flutter tooling and a data String is included in
+     * <p>When this {@code FlutterActivity} is run by Flutter tooling and a data String is included in
      * the launching {@code Intent}, that data String is interpreted as an app bundle path.
      *
-     * <p>By default, the app bundle path is obtained from {@link FlutterMain#findAppBundlePath()}.
+     * <p>When otherwise unspecified, the value is null, which defaults to the app bundle path defined
      *
      * <p>Subclasses may override this method to return a custom app bundle path.
      */
@@ -784,9 +755,7 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
             }
         }
 
-        // Return the default app bundle path.
-        // TODO(mattcarroll): move app bundle resolution into an appropriately named class.
-        return FlutterMain.findAppBundlePath();
+        return null;
     }
 
     /**
@@ -798,22 +767,12 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
         return (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
     }
 
-    /**
-     * {@link PinkFlutterPageDelegate.Host} method that is used by {@link
-     * PinkFlutterPageDelegate} to obtain the desired {@link RenderMode} that should be
-     * used when instantiating a {@link PinkFlutterView}.
-     */
     @NonNull
     @Override
     public RenderMode getRenderMode() {
         return getBackgroundMode() == BackgroundMode.opaque ? RenderMode.surface : RenderMode.texture;
     }
 
-    /**
-     * {@link PinkFlutterPageDelegate.Host} method that is used by {@link
-     * PinkFlutterPageDelegate} to obtain the desired {@link TransparencyMode} that should
-     * be used when instantiating a {@link PinkFlutterView}.
-     */
     @NonNull
     @Override
     public TransparencyMode getTransparencyMode() {
@@ -850,7 +809,7 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
 
     /**
      * Hook for subclasses to obtain a reference to the {@link FlutterEngine} that is owned by this
-     * {@code PinkFlutterActivity}.
+     * {@code FlutterActivity}.
      */
     @Nullable
     protected FlutterEngine getFlutterEngine() {
@@ -880,7 +839,7 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
      */
     @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
-        registerPlugins(flutterEngine);
+        GeneratedPluginRegister.registerGeneratedPlugins(flutterEngine);
     }
 
     /**
@@ -900,32 +859,32 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
      *
      * <p>This property is controlled with a protected method instead of an {@code Intent} argument
      * because the only situation where changing this value would help, is a situation in which {@code
-     * PinkFlutterActivity} is being subclassed to utilize a custom and/or cached {@link FlutterEngine}.
+     * FlutterActivity} is being subclassed to utilize a custom and/or cached {@link FlutterEngine}.
      *
      * <p>Defaults to {@code true}.
      *
      * <p>Control surfaces are used to provide Android resources and lifecycle events to plugins that
      * are attached to the {@link FlutterEngine}. If {@code shouldAttachEngineToActivity} is true then
-     * this {@code PinkFlutterActivity} will connect its {@link FlutterEngine} to itself, along with any
+     * this {@code FlutterActivity} will connect its {@link FlutterEngine} to itself, along with any
      * plugins that are registered with that {@link FlutterEngine}. This allows plugins to access the
      * {@code Activity}, as well as receive {@code Activity}-specific calls, e.g., {@link
      * Activity#onNewIntent(Intent)}. If {@code shouldAttachEngineToActivity} is false, then this
-     * {@code PinkFlutterActivity} will not automatically manage the connection between its {@link
+     * {@code FlutterActivity} will not automatically manage the connection between its {@link
      * FlutterEngine} and itself. In this case, plugins will not be offered a reference to an {@code
      * Activity} or its OS hooks.
      *
      * <p>Returning false from this method does not preclude a {@link FlutterEngine} from being
-     * attaching to a {@code PinkFlutterActivity} - it just prevents the attachment from happening
-     * automatically. A developer can choose to subclass {@code PinkFlutterActivity} and then invoke
+     * attaching to a {@code FlutterActivity} - it just prevents the attachment from happening
+     * automatically. A developer can choose to subclass {@code FlutterActivity} and then invoke
      * {@link ActivityControlSurface#attachToActivity(Activity, Lifecycle)} and {@link
      * ActivityControlSurface#detachFromActivity()} at the desired times.
      *
      * <p>One reason that a developer might choose to manually manage the relationship between the
      * {@code Activity} and {@link FlutterEngine} is if the developer wants to move the {@link
      * FlutterEngine} somewhere else. For example, a developer might want the {@link FlutterEngine} to
-     * outlive this {@code PinkFlutterActivity} so that it can be used later in a different {@code
+     * outlive this {@code FlutterActivity} so that it can be used later in a different {@code
      * Activity}. To accomplish this, the {@link FlutterEngine} may need to be disconnected from this
-     * {@code FluttterActivity} at an unusual time, preventing this {@code PinkFlutterActivity} from
+     * {@code FluttterActivity} at an unusual time, preventing this {@code FlutterActivity} from
      * correctly managing the relationship between the {@link FlutterEngine} and itself.
      */
     @Override
@@ -969,35 +928,5 @@ public class PinkFlutterActivity extends Activity implements PinkFlutterPageDele
             return false;
         }
         return true;
-    }
-
-    /**
-     * Registers all plugins that an app lists in its pubspec.yaml.
-     *
-     * <p>The Flutter tool generates a class called GeneratedPluginRegistrant, which includes the code
-     * necessary to register every plugin in the pubspec.yaml with a given {@code FlutterEngine}. The
-     * GeneratedPluginRegistrant must be generated per app, because each app uses different sets of
-     * plugins. Therefore, the Android embedding cannot place a compile-time dependency on this
-     * generated class. This method uses reflection to attempt to locate the generated file and then
-     * use it at runtime.
-     *
-     * <p>This method fizzles if the GeneratedPluginRegistrant cannot be found or invoked. This
-     * situation should never occur, but if any eventuality comes up that prevents an app from using
-     * this behavior, that app can still write code that explicitly registers plugins.
-     */
-    private static void registerPlugins(@NonNull FlutterEngine flutterEngine) {
-        try {
-            Class<?> generatedPluginRegistrant =
-                    Class.forName("io.flutter.plugins.GeneratedPluginRegistrant");
-            Method registrationMethod =
-                    generatedPluginRegistrant.getDeclaredMethod("registerWith", FlutterEngine.class);
-            registrationMethod.invoke(null, flutterEngine);
-        } catch (Exception e) {
-            Log.w(
-                    TAG,
-                    "Tried to automatically register plugins with FlutterEngine ("
-                            + flutterEngine
-                            + ") but could not find and invoke the GeneratedPluginRegistrant.");
-        }
     }
 }
