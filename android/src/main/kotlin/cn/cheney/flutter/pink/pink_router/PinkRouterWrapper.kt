@@ -98,8 +98,13 @@ internal object PinkRouterWrapper {
         callback?.let {
             resultCallbackMap[key] = it
         }
+        val finalMap: MutableMap<String, Any> = mutableMapOf()
+        params?.let {
+            finalMap.putAll(it)
+        }
+        finalMap["isNested"] = index != 0
         val intent = PinkActivity.newIntent(topActivity,
-                url, params, containerId, index)
+                url, finalMap, containerId, index)
         topActivity.startActivity(intent)
     }
 

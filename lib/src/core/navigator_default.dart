@@ -30,20 +30,7 @@ class NavigatorDefault extends StatefulWidget {
 
 class _NavigatorDefaultState extends State<NavigatorDefault> {
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          brightness: Brightness.light,
-          backgroundColor: Colors.white,
-          title: const Text('...', style: TextStyle(color: Colors.blue)),
-        ),
-        body: const Center(
-          child: SizedBox(
-            width: 60,
-            height: 60,
-            child: CircularProgressIndicator(
-              strokeWidth: 4,
-            ),
-          ),
-        ),
+  Widget build(BuildContext context) => Container(
+        color: Colors.white,
       );
 }

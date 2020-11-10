@@ -26,10 +26,10 @@ class NativeBActivity : AppCompatActivity() {
             val params = mutableMapOf<String, Any>()
             params["NativeB"] = "i am form nativeB"
             PinkRouter.push("pink://test/flutterB", params) {
-                AlertDialog.Builder(this@NativeBActivity)
-                        .setTitle("回传Result")
-                        .setMessage("$it")
-                        .show()
+//                AlertDialog.Builder(this@NativeBActivity)
+//                        .setTitle("回传Result")
+//                        .setMessage("$it")
+//                        .show()
             }
         }
     }

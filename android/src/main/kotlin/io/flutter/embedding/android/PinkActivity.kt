@@ -3,7 +3,6 @@ package io.flutter.embedding.android
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.KeyEvent
 import cn.cheney.flutter.pink.pink_router.PinkRouterWrapper
 import cn.cheney.flutter.pink.pink_router.container.ContainerDelegate
 import cn.cheney.flutter.pink.pink_router.util.Logger
@@ -17,7 +16,6 @@ class PinkActivity : PinkFlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pinkDelegate.onCreate()
-        Logger.d("PinkActivity onCreate $this")
         PinkRouterWrapper.syncPush(url(), params())
     }
 
