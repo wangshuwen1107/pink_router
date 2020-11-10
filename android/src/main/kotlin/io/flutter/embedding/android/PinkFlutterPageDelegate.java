@@ -391,7 +391,7 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
                 flutterEngine.getActivityControlSurface().attachToActivity(host.getActivity(), host.getLifecycle());
                 Logger.Companion.d("attach " + host.getActivity());
                 if (host.shouldAttachEngineToActivity() && flutterView != null) {
-                    flutterView.reattachToFlutterEngine();
+                    //flutterView.reattachToFlutterEngine();
                 }
             }
         }
