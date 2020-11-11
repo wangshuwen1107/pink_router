@@ -3,9 +3,8 @@ package cn.cheney.flutter.pink.pink_router_example
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import cn.cheney.flutter.pink.pink_router.PinkRouter
+import cn.cheney.flutter.pink.router.PinkRouter
 import kotlinx.android.synthetic.main.activity_page_a.*
 import java.io.Serializable
 import java.util.*

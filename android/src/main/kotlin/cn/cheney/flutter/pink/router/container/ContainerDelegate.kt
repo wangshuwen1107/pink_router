@@ -1,6 +1,4 @@
-package cn.cheney.flutter.pink.pink_router.container
-
-import io.flutter.embedding.android.PinkFlutterActivity
+package cn.cheney.flutter.pink.router.container
 
 class ContainerDelegate() {
 

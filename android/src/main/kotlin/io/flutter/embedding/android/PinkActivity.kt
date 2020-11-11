@@ -3,9 +3,9 @@ package io.flutter.embedding.android
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import cn.cheney.flutter.pink.pink_router.PinkRouterWrapper
-import cn.cheney.flutter.pink.pink_router.container.ContainerDelegate
-import cn.cheney.flutter.pink.pink_router.util.Logger
+import cn.cheney.flutter.pink.router.core.PinkRouterImpl
+import cn.cheney.flutter.pink.router.container.ContainerDelegate
+import cn.cheney.flutter.pink.router.util.Logger
 import java.io.Serializable
 
 
@@ -16,13 +16,13 @@ class PinkActivity : PinkFlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pinkDelegate.onCreate()
-        PinkRouterWrapper.syncPush(url(), params())
+        onPush(url(), params())
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        PinkRouterWrapper.syncPush(url(), params())
+        onPush(url(), params())
     }
 
     override fun onStart() {
@@ -53,9 +53,13 @@ class PinkActivity : PinkFlutterActivity() {
 
     override fun onBackPressed() {
         Logger.d("onBackPressed is called ")
-        PinkRouterWrapper.pop(null, true)
+        PinkRouterImpl.pop(null, true)
     }
 
+
+    private fun onPush(url: String, params: Map<String, Any?>?) {
+        PinkRouterImpl.engine.sendChannel.push(url, params)
+    }
 
     companion object {
         const val KEY_URL = "url"

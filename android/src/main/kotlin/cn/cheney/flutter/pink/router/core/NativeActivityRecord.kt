@@ -1,4 +1,4 @@
-package cn.cheney.flutter.pink.pink_router
+package cn.cheney.flutter.pink.router.core
 
 import android.app.Activity
 import android.app.Application

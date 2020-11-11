@@ -19,7 +19,7 @@ import androidx.lifecycle.Lifecycle;
 
 import java.util.Arrays;
 
-import cn.cheney.flutter.pink.pink_router.util.Logger;
+import cn.cheney.flutter.pink.router.util.Logger;
 import io.flutter.FlutterInjector;
 import io.flutter.Log;
 import io.flutter.app.FlutterActivity;

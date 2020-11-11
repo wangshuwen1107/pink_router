@@ -28,7 +28,7 @@ class _MainPageState extends State<MainPage> {
             MaterialButton(
               color: Colors.pink[100],
               child: Text(
-                "Flutter->Flutter页面回传",
+                "Flutter->Flutter(回传)",
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () => _pushFlutterPageA(),
@@ -36,7 +36,7 @@ class _MainPageState extends State<MainPage> {
             MaterialButton(
               color: Colors.pink[100],
               child: Text(
-                "Flutter MethodA",
+                "Flutter->Flutter(方法)",
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () => _invokeMethodA(),
@@ -44,7 +44,7 @@ class _MainPageState extends State<MainPage> {
             MaterialButton(
               color: Colors.pink[100],
               child: Text(
-                "Native PageA",
+                "Flutter->Native(回参)",
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () => _pushNativePageA(),
@@ -52,7 +52,7 @@ class _MainPageState extends State<MainPage> {
             MaterialButton(
               color: Colors.pink[100],
               child: Text(
-                "Native PageB",
+                "Flutter->Native->Flutter",
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () => _pushNativePageB(),

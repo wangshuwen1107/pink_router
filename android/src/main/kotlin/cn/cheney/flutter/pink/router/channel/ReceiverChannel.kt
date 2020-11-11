@@ -1,13 +1,9 @@
-package cn.cheney.flutter.pink.pink_router.channel
+package cn.cheney.flutter.pink.router.channel
 
 import android.text.TextUtils
-import cn.cheney.flutter.pink.pink_router.NativeActivityRecord
-import cn.cheney.flutter.pink.pink_router.PinkRouter
-import cn.cheney.flutter.pink.pink_router.PinkRouterWrapper
-import io.flutter.embedding.android.PinkActivity
-import io.flutter.embedding.android.containerId
-import io.flutter.embedding.android.index
-import io.flutter.embedding.android.url
+import cn.cheney.flutter.pink.router.core.NativeActivityRecord
+import cn.cheney.flutter.pink.router.PinkRouter
+import cn.cheney.flutter.pink.router.core.PinkRouterImpl
 
 class ReceiverChannel(private val channel: ChannelProxy) {
 
@@ -45,7 +41,7 @@ class ReceiverChannel(private val channel: ChannelProxy) {
                 return@registerMethod
             }
             if (routerList.indexOf(url) != -1) {
-                PinkRouterWrapper.push(url!!, paramsMap) {
+                PinkRouterImpl.push(url!!, paramsMap) {
                     result.success(it)
                 }
             } else {
@@ -57,7 +53,7 @@ class ReceiverChannel(private val channel: ChannelProxy) {
 
     private fun onPop() {
         channel.registerMethod("pop") { args, result ->
-            PinkRouterWrapper.pop(args)
+            PinkRouterImpl.pop(args)
             result.success(true)
         }
     }

@@ -28,7 +28,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: cn.cheney.flutter.pink.pink_router
+        package: cn.cheney.flutter.pink.router
         pluginClass: PinkRouterPlugin
       ios:
         pluginClass: PinkRouterPlugin

@@ -1,4 +1,4 @@
-group 'cn.cheney.flutter.pink.pink_router'
+group 'cn.cheney.flutter.pink.router'
 version '1.0-SNAPSHOT'
 
 buildscript {

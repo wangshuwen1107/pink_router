@@ -2,9 +2,9 @@ package cn.cheney.flutter.pink.pink_router_example
 
 import android.content.Context
 import android.util.Log
-import cn.cheney.flutter.pink.pink_router.NativeCallback
-import cn.cheney.flutter.pink.pink_router.PinkRouter
-import cn.cheney.flutter.pink.pink_router.ResultCallback
+import cn.cheney.flutter.pink.router.NativeCallback
+import cn.cheney.flutter.pink.router.PinkRouter
+import cn.cheney.flutter.pink.router.ResultCallback
 import io.flutter.app.FlutterApplication
 import java.io.Serializable
 

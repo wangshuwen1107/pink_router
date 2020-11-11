@@ -1,4 +1,4 @@
-package cn.cheney.flutter.pink.pink_router.util
+package cn.cheney.flutter.pink.router.util
 
 import android.util.Log
 
@@ -8,8 +8,13 @@ class Logger {
 
         private const val TAG = "Pink"
 
-        public fun d(msg: String) {
+        fun d(msg: String) {
             Log.d(TAG, msg)
+        }
+
+
+        fun e(msg: String) {
+            Log.e(TAG, msg)
         }
     }
 }

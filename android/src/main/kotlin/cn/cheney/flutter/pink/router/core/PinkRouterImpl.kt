@@ -1,7 +1,7 @@
-package cn.cheney.flutter.pink.pink_router
+package cn.cheney.flutter.pink.router.core
 
 import android.content.Context
-import cn.cheney.flutter.pink.pink_router.util.Logger
+import cn.cheney.flutter.pink.router.ResultCallback
 import io.flutter.embedding.android.PinkActivity
 import io.flutter.embedding.android.containerId
 import io.flutter.embedding.android.index
@@ -9,9 +9,9 @@ import io.flutter.embedding.android.url
 import java.util.*
 
 
-internal object PinkRouterWrapper {
+internal object PinkRouterImpl {
 
-    private lateinit var engine: PinkEngine
+    lateinit var engine: FlutterEngineHolder
 
     var resultCallbackMap: MutableMap<String, ResultCallback> = mutableMapOf()
 
@@ -20,14 +20,8 @@ internal object PinkRouterWrapper {
     var pageMap: MutableMap<Long, Stack<String>> = mutableMapOf()
 
     fun init(context: Context) {
-        engine = PinkEngine(context)
+        engine = FlutterEngineHolder(context)
     }
-
-
-    fun syncPush(url: String, params: Map<String, Any?>? = null, callback: ResultCallback? = null) {
-        engine.sendChannel.push(url, params, callback)
-    }
-
 
     fun pop(result: Any? = null, isBackPress: Boolean = false) {
         val topActivity = NativeActivityRecord.getTopActivity()

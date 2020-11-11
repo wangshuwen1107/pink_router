@@ -1,6 +1,8 @@
-package cn.cheney.flutter.pink.pink_router
+package cn.cheney.flutter.pink.router
 
 import android.content.Context
+import cn.cheney.flutter.pink.router.core.NativeActivityRecord
+import cn.cheney.flutter.pink.router.core.PinkRouterImpl
 import io.flutter.plugin.common.MethodChannel
 
 interface NativeCallback {
@@ -15,22 +17,22 @@ object PinkRouter {
     @JvmStatic
     fun init(context: Context) {
         NativeActivityRecord.registerCallbacks(context)
-        PinkRouterWrapper.init(context)
+        PinkRouterImpl.init(context)
     }
 
     @JvmStatic
     fun push(url: String, params: Map<String, Any>? = null, callback: ResultCallback? = null) {
-        PinkRouterWrapper.push(url, params, callback)
+        PinkRouterImpl.push(url, params, callback)
     }
 
     @JvmStatic
     fun pop(result: Any? = null) {
-        PinkRouterWrapper.pop(result)
+        PinkRouterImpl.pop(result)
     }
 
     @JvmStatic
     fun call(url: String, params: Map<String, Any>?, callback: ResultCallback?) {
-        PinkRouterWrapper.call(url, params, callback)
+        PinkRouterImpl.call(url, params, callback)
     }
 
 

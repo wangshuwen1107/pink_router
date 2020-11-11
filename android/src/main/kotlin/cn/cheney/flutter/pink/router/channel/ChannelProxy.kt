@@ -1,7 +1,7 @@
-package cn.cheney.flutter.pink.pink_router.channel
+package cn.cheney.flutter.pink.router.channel
 
 import android.text.TextUtils
-import cn.cheney.flutter.pink.pink_router.util.Logger
+import cn.cheney.flutter.pink.router.util.Logger
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
