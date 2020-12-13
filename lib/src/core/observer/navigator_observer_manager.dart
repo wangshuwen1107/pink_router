@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'navigator_default.dart';
-import 'navigator_page_route.dart';
+import '../navigator_default.dart';
+import '../navigator_page_route.dart';
+import '../pink_router_wrapper.dart';
 
 class NavigatorObserverManager extends NavigatorObserver {
   final pageRoutes = <PinkPageRoute>[
@@ -18,7 +19,12 @@ class NavigatorObserverManager extends NavigatorObserver {
       if (url == "/") {
         return;
       }
+      previousRoute = pageRoutes.last;
       pageRoutes.add(route);
+      PinkRouterWrapper.observerList.forEach((observer) {
+        observer.didAppear(route.settings);
+        observer.didDisappear(previousRoute.settings);
+      });
     }
   }
 
@@ -27,8 +33,15 @@ class NavigatorObserverManager extends NavigatorObserver {
     super.didPop(route, previousRoute);
     if (route is PinkPageRoute) {
       print(
-          "🐳 Flutter didPop url=${route.settings.name} params=${route.settings.arguments}");
+          "🐳 Flutter didPop url=${route.settings.name} previousRoute=${previousRoute.settings.name}");
       pageRoutes.removeLast();
+
+      PinkRouterWrapper.observerList.forEach((observer) {
+        observer.destroy(route.settings);
+        if (previousRoute is PinkPageRoute) {
+          observer.didDisappear(previousRoute.settings);
+        }
+      });
     }
   }
 }

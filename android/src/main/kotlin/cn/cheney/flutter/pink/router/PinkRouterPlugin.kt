@@ -23,7 +23,6 @@ public class PinkRouterPlugin : FlutterPlugin {
 
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-        //channel.release()
     }
 
 

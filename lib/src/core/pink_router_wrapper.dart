@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pink_router/src/core/navigator_observer_manager.dart';
+import 'package:pink_router/src/core/observer/navigator_observer_manager.dart';
 import '../util/pink_util.dart';
 import '../module/pink_module.dart';
 import '../pink_block_type.dart';
@@ -7,6 +7,8 @@ import '../channel/channel_proxy.dart';
 import '../channel/channel_send.dart';
 import '../channel/channel_receive.dart';
 import 'navigator_proxy_widget.dart';
+import 'observer/lifecycle_observer.dart';
+
 
 class PinkRouterWrapper {
   static Map<String, WidgetBuilder> _pageMap = {};
@@ -25,9 +27,14 @@ class PinkRouterWrapper {
   static NavigatorProxyWidgetState get navigatorProxyState =>
       _navigatorProxyKey?.currentState;
 
+  static  List<LifeCycleObserver> get observerList => _observerList;
+
   static GlobalKey<NavigatorProxyWidgetState> _navigatorProxyKey;
 
   static NavigatorObserverManager _observerManager;
+
+  static List<LifeCycleObserver> _observerList = [];
+
 
   static TransitionBuilder builder() {
     if (null == _channelProxy) {
@@ -48,7 +55,7 @@ class PinkRouterWrapper {
       return NavigatorProxyWidget(
         key: _navigatorProxyKey ??= GlobalKey<NavigatorProxyWidgetState>(),
         navigator: navigator,
-        pinkPageObserver: _observerManager,
+        observerManager: _observerManager,
       );
     };
   }
@@ -62,6 +69,10 @@ class PinkRouterWrapper {
         _addRoute2Map(key, block: value);
       });
     });
+  }
+
+  static void addLifeCycleObserver(LifeCycleObserver observer){
+    _observerList.add(observer);
   }
 
   static Future<T> push<T>(String url, Map<String, dynamic> params) {

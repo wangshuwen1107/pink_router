@@ -9,7 +9,7 @@ import cn.cheney.flutter.pink.router.util.Logger
 import java.io.Serializable
 
 
-class PinkActivity : PinkFlutterActivity() {
+class PinkActivity : FlutterActivity() {
 
     private var pinkDelegate: ContainerDelegate = ContainerDelegate()
 

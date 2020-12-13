@@ -1,12 +1,13 @@
 package cn.cheney.flutter.pink.pink_router_example
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import cn.cheney.flutter.pink.router.PinkRouter
 import kotlinx.android.synthetic.main.activity_page_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : Activity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

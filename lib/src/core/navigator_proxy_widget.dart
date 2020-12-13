@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pink_router/src/core/pink_router_wrapper.dart';
-import 'navigator_observer_manager.dart';
+import 'observer/navigator_observer_manager.dart';
 import '../util/pink_util.dart';
 import '../util/pink_stateful_widget.dart';
 import 'navigator_page_route.dart';
 
 class NavigatorProxyWidget extends StatefulWidget {
-  const NavigatorProxyWidget({Key key, this.navigator, this.pinkPageObserver})
+  const NavigatorProxyWidget({Key key, this.navigator, this.observerManager})
       : super(key: key);
 
   @override
@@ -14,10 +14,12 @@ class NavigatorProxyWidget extends StatefulWidget {
 
   final Navigator navigator;
 
-  final NavigatorObserverManager pinkPageObserver;
+  final NavigatorObserverManager observerManager;
 }
 
 class NavigatorProxyWidgetState extends State<NavigatorProxyWidget> {
+  List<PinkPageRoute> get pageRouteList => widget.observerManager.pageRoutes;
+
   @override
   Widget build(BuildContext context) {
     return widget.navigator;
@@ -37,17 +39,28 @@ class NavigatorProxyWidgetState extends State<NavigatorProxyWidget> {
     WidgetBuilder builder = PinkRouterWrapper.pageBuilder[urlStr];
 
     if (null != builder) {
-      var pageRoute = PinkPageRoute(
-          isNested: isNested,
-          builder: builder,
-          settings: RouteSettings(name: urlStr, arguments: allParams));
+      RouteSettings settings =
+          RouteSettings(name: urlStr, arguments: allParams);
+      PinkPageRoute pageRoute = PinkPageRoute(
+          isNested: isNested, builder: builder, settings: settings);
+
+      PinkRouterWrapper.observerList.forEach((observer) {
+        observer.create(settings);
+      });
+      PinkPageRoute lastPageRoute = pageRouteList.last;
+      PinkRouterWrapper.observerList.forEach((observer) {
+        if (null != lastPageRoute && lastPageRoute.settings.name != "/") {
+          observer.willDisappear(settings);
+        }
+        observer.willAppear(pageRoute.settings);
+      });
       return navigatorState.push(pageRoute);
     }
     return Future.value(false);
   }
 
   Future<bool> maybePop<T extends Object>({bool isBackPress, T result}) async {
-    PinkPageRoute pageRoute = widget.pinkPageObserver.pageRoutes.last;
+    PinkPageRoute pageRoute = pageRouteList.last;
     var isWillPop = false;
     if (isBackPress) {
       isWillPop = await pageRoute.willPop() == RoutePopDisposition.pop;
