@@ -50,7 +50,7 @@ class NavigatorProxyWidgetState extends State<NavigatorProxyWidget> {
       PinkPageRoute lastPageRoute = pageRouteList.last;
       PinkRouterWrapper.observerList.forEach((observer) {
         if (null != lastPageRoute && lastPageRoute.settings.name != "/") {
-          observer.willDisappear(settings);
+          observer.willDisappear(lastPageRoute.settings);
         }
         observer.willAppear(pageRoute.settings);
       });
@@ -60,14 +60,20 @@ class NavigatorProxyWidgetState extends State<NavigatorProxyWidget> {
   }
 
   Future<bool> maybePop<T extends Object>({bool isBackPress, T result}) async {
-    PinkPageRoute pageRoute = pageRouteList.last;
+    PinkPageRoute lastPage = pageRouteList.last;
+    PinkPageRoute willLastPage = pageRouteList[pageRouteList.length - 2];
     var isWillPop = false;
     if (isBackPress) {
-      isWillPop = await pageRoute.willPop() == RoutePopDisposition.pop;
+      isWillPop = await lastPage.willPop() == RoutePopDisposition.pop;
     }
     bool needPop = !isBackPress || isWillPop;
     if (needPop) {
       final navigatorState = widget.navigator.tryStateOf<NavigatorState>();
+      PinkRouterWrapper.observerList.forEach((observer) {
+        observer.willDisappear(lastPage.settings);
+        observer.willAppear(willLastPage.settings);
+        observer.didDisappear(lastPage.settings);
+      });
       navigatorState?.pop(result);
     }
     print("maybePop isBack=$isBackPress result=$result canPop=$needPop ");

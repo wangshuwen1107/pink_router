@@ -13,19 +13,22 @@ class NavigatorObserverManager extends NavigatorObserver {
   @override
   void didPush(Route route, Route previousRoute) {
     super.didPush(route, previousRoute);
-    if (route is PinkPageRoute) {
-      String url = route.settings.name;
-      print("🐳 Flutter didPush url=$url params=${route.settings.arguments}");
-      if (url == "/") {
-        return;
-      }
-      previousRoute = pageRoutes.last;
-      pageRoutes.add(route);
-      PinkRouterWrapper.observerList.forEach((observer) {
-        observer.didAppear(route.settings);
-        observer.didDisappear(previousRoute.settings);
-      });
+    if (!(route is PinkPageRoute)) {
+      return;
     }
+    String url = route.settings.name;
+    print("🐳 Flutter didPush url=$url params=${route.settings.arguments}");
+    if (url == "/") {
+      return;
+    }
+    previousRoute = pageRoutes.last;
+    pageRoutes.add(route);
+    PinkRouterWrapper.observerList.forEach((observer) {
+      observer.didAppear(route.settings);
+      if (previousRoute.settings.name != "/") {
+        observer.didDisappear(previousRoute.settings);
+      }
+    });
   }
 
   @override
@@ -39,7 +42,7 @@ class NavigatorObserverManager extends NavigatorObserver {
       PinkRouterWrapper.observerList.forEach((observer) {
         observer.destroy(route.settings);
         if (previousRoute is PinkPageRoute) {
-          observer.didDisappear(previousRoute.settings);
+           observer.didAppear(previousRoute.settings);
         }
       });
     }

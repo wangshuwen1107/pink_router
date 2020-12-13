@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../main_page.dart';
 
 class ModuleA with PinkModule, LifeCycleObserver {
+
   @override
   Map<String, MethodBlock> onMethodRegister() {
     return {
@@ -29,40 +30,40 @@ class ModuleA with PinkModule, LifeCycleObserver {
   @override
   void create(RouteSettings routeSettings) {
     print(
-        "${routeSettings.name} arguments=${routeSettings.arguments} create");
+        "LifeCycle ${routeSettings.name} arguments=${routeSettings.arguments} create");
   }
 
   @override
   void willAppear(RouteSettings routeSettings) {
     print(
-        "${routeSettings.name} arguments=${routeSettings.arguments} willAppear");
+        "LifeCycle ${routeSettings.name} arguments=${routeSettings.arguments} willAppear");
   }
 
   @override
   void didAppear(RouteSettings routeSettings) {
     print(
-        "${routeSettings.name} arguments=${routeSettings.arguments} didAppear");
+        "LifeCycle ${routeSettings.name} arguments=${routeSettings.arguments} didAppear");
   }
 
 
   @override
   void willDisappear(RouteSettings routeSettings) {
     print(
-        "${routeSettings.name} arguments=${routeSettings.arguments} willDisappear");
+        "LifeCycle ${routeSettings.name} arguments=${routeSettings.arguments} willDisappear");
   }
 
 
   @override
   void didDisappear(RouteSettings routeSettings) {
     print(
-        "${routeSettings.name} arguments=${routeSettings.arguments} didDisappear");
+        "LifeCycle ${routeSettings.name} arguments=${routeSettings.arguments} didDisappear");
   }
 
 
   @override
   void destroy(RouteSettings routeSettings) {
     print(
-        "${routeSettings.name} arguments=${routeSettings.arguments} destroy");
+        "LifeCycle ${routeSettings.name} arguments=${routeSettings.arguments} destroy");
   }
 
 
