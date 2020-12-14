@@ -1,11 +1,11 @@
 package cn.cheney.flutter.pink.router.channel
 
 import android.text.TextUtils
-import cn.cheney.flutter.pink.router.core.NativeActivityRecord
+import cn.cheney.flutter.pink.router.core.ActivityDelegate
 import cn.cheney.flutter.pink.router.PinkRouter
 import cn.cheney.flutter.pink.router.core.PinkRouterImpl
 
-class ReceiverChannel(private val channel: ChannelProxy) {
+class RouteReceiverChannel(private val channel: ChannelProxy) {
 
     private var routerList: List<String> = listOf()
 
@@ -34,13 +34,13 @@ class ReceiverChannel(private val channel: ChannelProxy) {
                 result.error("URL_EMPTY", "URL_EMPTY", null)
                 return@registerMethod
             }
-            val topActivity = NativeActivityRecord.getTopActivity()
+            val topActivity = ActivityDelegate.getTopActivity()
             if (null == topActivity) {
                 result.error("NATIVE_TOP_CONTEXT_NULL",
                         "NATIVE_TOP_CONTEXT_NULL_PLEASE_INIT", null)
                 return@registerMethod
             }
-            if (routerList.indexOf(url) != -1) {
+            if (routerList.contains(url)) {
                 PinkRouterImpl.push(url!!, paramsMap) {
                     result.success(it)
                 }
@@ -68,7 +68,7 @@ class ReceiverChannel(private val channel: ChannelProxy) {
                 result.error("URL_EMPTY", "URL_EMPTY", null)
                 return@registerMethod
             }
-            val topActivity = NativeActivityRecord.getTopActivity()
+            val topActivity = ActivityDelegate.getTopActivity()
             if (null == topActivity) {
                 result.error("NATIVE_TOP_CONTEXT_NULL",
                         "NATIVE_TOP_CONTEXT_NULL_PLEASE_INIT", null)

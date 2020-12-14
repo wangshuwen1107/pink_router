@@ -5,6 +5,9 @@ import android.util.Log
 import cn.cheney.flutter.pink.router.NativeCallback
 import cn.cheney.flutter.pink.router.PinkRouter
 import cn.cheney.flutter.pink.router.ResultCallback
+import cn.cheney.flutter.pink.router.core.observer.PageObserver
+import cn.cheney.flutter.pink.router.model.RouteSettings
+import cn.cheney.flutter.pink.router.util.Logger
 import io.flutter.app.FlutterApplication
 import java.io.Serializable
 
@@ -21,7 +24,7 @@ class App : FlutterApplication() {
 
     private fun initRouter() {
         PinkRouter.init(context = this)
-        PinkRouter.setProtocolCallback(object : NativeCallback {
+        PinkRouter.setNativeCallback(object : NativeCallback {
             override fun onPush(context: Context,
                                 url: String,
                                 params: Map<String, Any>?,
@@ -42,6 +45,27 @@ class App : FlutterApplication() {
                                 result: ResultCallback) {
             }
 
+        })
+        
+        PinkRouter.addPageLifeCycleObserver(object:PageObserver{
+            override fun create(routeSettings: RouteSettings) {
+              
+            }
+
+            override fun willAppear(routeSettings: RouteSettings) {
+            }
+
+            override fun didAppear(routeSettings: RouteSettings) {
+            }
+
+            override fun willDisappear(routeSettings: RouteSettings) {
+            }
+
+            override fun didDisappear(routeSettings: RouteSettings) {
+            }
+
+            override fun destroy(routeSettings: RouteSettings) {
+            }
         })
     }
 

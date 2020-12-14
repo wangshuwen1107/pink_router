@@ -1,10 +1,10 @@
 import 'package:pink_router/src/core/pink_router_wrapper.dart';
 import 'channel_proxy.dart';
 
-class ReceiveChannel {
+class RouteReceiveChannel {
   final ChannelProxy _channelProxy;
 
-  ReceiveChannel(this._channelProxy) {
+  RouteReceiveChannel(this._channelProxy) {
     onPush();
     onPop();
   }

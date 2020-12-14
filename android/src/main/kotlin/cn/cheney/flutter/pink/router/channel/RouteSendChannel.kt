@@ -4,7 +4,7 @@ import cn.cheney.flutter.pink.router.ResultCallback
 import cn.cheney.flutter.pink.router.util.Logger
 import io.flutter.plugin.common.MethodChannel
 
-class SendChannel(private val channel: ChannelProxy) {
+class RouteSendChannel(private val channel: ChannelProxy) {
 
 
     class ResultCallbackProxy(private val callback: ResultCallback?) : MethodChannel.Result {

@@ -24,14 +24,14 @@ internal object PinkRouterImpl {
     }
 
     fun pop(result: Any? = null, isBackPress: Boolean = false) {
-        val topActivity = NativeActivityRecord.getTopActivity()
+        val topActivity = ActivityDelegate.getTopActivity()
         if (null == topActivity || topActivity !is PinkActivity) {
             return
         }
         val index = (topActivity).index()
         if (index == 0) {
             val prevKey = topActivity.url() + "_" + topActivity.index()
-            engine.sendChannel.pop(result, isBackPress) {
+            engine.routeSendChannel.pop(result, isBackPress) {
                 val popResult = it as? Boolean
                 if (popResult != null && popResult) {
                     containerStack.remove(topActivity.containerId())
@@ -40,7 +40,7 @@ internal object PinkRouterImpl {
                 }
             }
         } else {
-            engine.sendChannel.pop(result, isBackPress) {
+            engine.routeSendChannel.pop(result, isBackPress) {
                 val popResult = it as? Boolean
                 if (popResult != null && popResult) {
                     val containerPageStack = pageMap[topActivity.containerId()]
@@ -55,7 +55,7 @@ internal object PinkRouterImpl {
     }
 
     fun push(url: String, params: Map<String, Any>?, callback: ResultCallback?) {
-        val topActivity = NativeActivityRecord.getTopActivity()
+        val topActivity = ActivityDelegate.getTopActivity()
         if (null == topActivity) {
             callback?.invoke("error_context")
             return
@@ -104,7 +104,7 @@ internal object PinkRouterImpl {
 
 
     fun call(url: String, params: Map<String, Any>?, callback: ResultCallback?) {
-        engine.sendChannel.call(url, params, callback)
+        engine.routeSendChannel.call(url, params, callback)
     }
 
 

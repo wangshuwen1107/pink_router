@@ -4,7 +4,7 @@ import '../page_b.dart';
 import 'package:flutter/material.dart';
 import '../main_page.dart';
 
-class ModuleA with PinkModule, LifeCycleObserver {
+class ModuleA with PinkModule, PageLifeCycleObserver {
 
   @override
   Map<String, MethodBlock> onMethodRegister() {

@@ -1,6 +1,6 @@
 import 'package:pink_router/pink.dart';
 import 'package:flutter/material.dart';
-import 'observer/lifecycle_observer.dart';
+import 'observer/navigator_page_observer.dart';
 import 'pink_router_wrapper.dart';
 import '../module/pink_module.dart';
 
@@ -22,7 +22,7 @@ class PinkRouter {
     PinkRouterWrapper.register(modules);
   }
 
-  static void addLifeCycleObserver(LifeCycleObserver observer) {
+  static void addLifeCycleObserver(PageLifeCycleObserver observer) {
     PinkRouterWrapper.addLifeCycleObserver(observer);
   }
 

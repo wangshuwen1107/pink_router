@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:pink_router/src/core/observer/navigator_observer_manager.dart';
+import 'package:pink_router/src/core/observer/navigator_observer.dart';
 import '../util/pink_util.dart';
 import '../module/pink_module.dart';
 import '../pink_block_type.dart';
 import '../channel/channel_proxy.dart';
-import '../channel/channel_send.dart';
-import '../channel/channel_receive.dart';
+import '../channel/channel_route_send.dart';
+import '../channel/channel_route_receive.dart';
+import '../channel/channel_page_observer_receive.dart';
+import '../channel/channel_page_observer_send.dart';
 import 'navigator_proxy_widget.dart';
-import 'observer/lifecycle_observer.dart';
-
+import 'observer/navigator_page_observer.dart';
+import 'observer/navigator_page_observers.dart';
+import '../entity/pink_const.dart';
 
 class PinkRouterWrapper {
   static Map<String, WidgetBuilder> _pageMap = {};
@@ -18,44 +21,46 @@ class PinkRouterWrapper {
 
   static ChannelProxy _channelProxy;
 
-  static SendChannel sendChannel;
+  static RouteSendChannel routeSendChannel;
 
-  static ReceiveChannel receiveChannel;
+  static RouteReceiveChannel routeReceiveChannel;
+
+  static PageObserverReceiveChannel pageObserverReceiveChannel;
+
+  static PageObserverSendChannel pageObserverSendChannel;
 
   static Map<String, WidgetBuilder> get pageBuilder => _pageMap;
 
   static NavigatorProxyWidgetState get navigatorProxyState =>
       _navigatorProxyKey?.currentState;
 
-  static  List<LifeCycleObserver> get observerList => _observerList;
-
   static GlobalKey<NavigatorProxyWidgetState> _navigatorProxyKey;
 
-  static NavigatorObserverManager _observerManager;
-
-  static List<LifeCycleObserver> _observerList = [];
-
+  static PinkNavigatorObserver _pinkNavigatorObserver;
 
   static TransitionBuilder builder() {
     if (null == _channelProxy) {
-      _channelProxy = ChannelProxy('main');
-      sendChannel = SendChannel(_channelProxy);
-      receiveChannel = ReceiveChannel(_channelProxy);
-      sendChannel
+      _channelProxy = ChannelProxy(PinkConstant.CHANNEL_NAME);
+      routeSendChannel = RouteSendChannel(_channelProxy);
+      routeReceiveChannel = RouteReceiveChannel(_channelProxy);
+
+      pageObserverReceiveChannel = PageObserverReceiveChannel(_channelProxy);
+      pageObserverSendChannel = PageObserverSendChannel(_channelProxy);
+      routeSendChannel
           .registerToNative(_routerList)
           .then((value) {})
           .catchError((e) {});
-      _observerManager = NavigatorObserverManager();
+      _pinkNavigatorObserver = PinkNavigatorObserver();
     }
     return (context, child) {
       final navigator = child is Navigator ? child : null;
-      if (!navigator.observers.contains(_observerManager)) {
-        navigator.observers.add(_observerManager);
+      if (!navigator.observers.contains(_pinkNavigatorObserver)) {
+        navigator.observers.add(_pinkNavigatorObserver);
       }
       return NavigatorProxyWidget(
         key: _navigatorProxyKey ??= GlobalKey<NavigatorProxyWidgetState>(),
         navigator: navigator,
-        observerManager: _observerManager,
+        pinkNavigatorObserver: _pinkNavigatorObserver,
       );
     };
   }
@@ -71,8 +76,8 @@ class PinkRouterWrapper {
     });
   }
 
-  static void addLifeCycleObserver(LifeCycleObserver observer){
-    _observerList.add(observer);
+  static void addLifeCycleObserver(PageLifeCycleObserver observer){
+    NavigatorPageObserverManager.addLifeCycleObserver(observer);
   }
 
   static Future<T> push<T>(String url, Map<String, dynamic> params) {
@@ -80,11 +85,11 @@ class PinkRouterWrapper {
     String completeUrlStr = PinkUtil.autoCompleteUrl(url);
     var allParams = PinkUtil.mergeParams(Uri.parse(completeUrlStr).query,
         extraParams: params);
-    return sendChannel.push(urlStr, allParams);
+    return routeSendChannel.push(urlStr, allParams);
   }
 
   static void pop<T extends Object>([T result]) {
-    sendChannel.pop(result);
+    routeSendChannel.pop(result);
   }
 
   static Future<T> call<T>(String url, Map<String, dynamic> params) {
@@ -98,7 +103,7 @@ class PinkRouterWrapper {
       return methodBlock.call(params);
     }
     print("💘 Native method: $urlStr  params = $allParams");
-    return sendChannel.call(url, params);
+    return routeSendChannel.call(url, params);
   }
 
   static void _addRoute2Map(String url,

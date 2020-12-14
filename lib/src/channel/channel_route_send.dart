@@ -1,9 +1,9 @@
 import 'channel_proxy.dart';
 
-class SendChannel {
+class RouteSendChannel {
   final ChannelProxy _channelProxy;
 
-  SendChannel(this._channelProxy);
+  RouteSendChannel(this._channelProxy);
 
   Future<T> registerToNative<T>(List<String> routerUrlList) {
     return _channelProxy.invokeMethod("registerRouter", routerUrlList);

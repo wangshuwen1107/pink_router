@@ -1,8 +1,11 @@
 package cn.cheney.flutter.pink.router
 
+import android.app.Application
 import android.content.Context
-import cn.cheney.flutter.pink.router.core.NativeActivityRecord
+import cn.cheney.flutter.pink.router.core.ActivityDelegate
 import cn.cheney.flutter.pink.router.core.PinkRouterImpl
+import cn.cheney.flutter.pink.router.core.observer.PageObserver
+import cn.cheney.flutter.pink.router.core.observer.PageObserverManager
 import io.flutter.plugin.common.MethodChannel
 
 interface NativeCallback {
@@ -16,7 +19,7 @@ object PinkRouter {
 
     @JvmStatic
     fun init(context: Context) {
-        NativeActivityRecord.registerCallbacks(context)
+        (context as? Application)?.registerActivityLifecycleCallbacks(ActivityDelegate)
         PinkRouterImpl.init(context)
     }
 
@@ -37,8 +40,13 @@ object PinkRouter {
 
 
     @JvmStatic
-    fun setProtocolCallback(callback: NativeCallback) {
+    fun setNativeCallback(callback: NativeCallback) {
         Config.callback = callback
+    }
+
+    @JvmStatic
+    fun addPageLifeCycleObserver(observer: PageObserver) {
+        PageObserverManager.addPageLifeCycleObserver(observer)
     }
 
 

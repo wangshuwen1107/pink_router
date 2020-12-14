@@ -58,7 +58,7 @@ class PinkActivity : FlutterActivity() {
 
 
     private fun onPush(url: String, params: Map<String, Any?>?) {
-        PinkRouterImpl.engine.sendChannel.push(url, params)
+        PinkRouterImpl.engine.routeSendChannel.push(url, params)
     }
 
     companion object {
