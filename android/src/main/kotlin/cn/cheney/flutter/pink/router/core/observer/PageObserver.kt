@@ -1,6 +1,6 @@
 package cn.cheney.flutter.pink.router.core.observer
 
-import cn.cheney.flutter.pink.router.model.RouteSettings
+import cn.cheney.flutter.pink.router.entity.RouteSettings
 
 
 interface PageObserver {

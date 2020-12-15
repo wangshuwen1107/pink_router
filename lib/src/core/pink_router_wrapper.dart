@@ -10,7 +10,7 @@ import '../channel/channel_page_observer_receive.dart';
 import '../channel/channel_page_observer_send.dart';
 import 'navigator_proxy_widget.dart';
 import 'observer/navigator_page_observer.dart';
-import 'observer/navigator_page_observers.dart';
+import 'observer/navigator_page_observer_manager.dart';
 import '../entity/pink_const.dart';
 
 class PinkRouterWrapper {

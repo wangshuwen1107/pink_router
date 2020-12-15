@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'navigator_default.dart';
 import 'pink_router.dart';
-
+import '../entity/pink_const.dart';
 class PinkApp extends MaterialApp {
   PinkApp({
     Key key,
@@ -26,8 +26,8 @@ class PinkApp extends MaterialApp {
   }) : super(
             key: key,
             builder: PinkRouter.builder(),
-            initialRoute: '/',
-            routes: {'/': (_) => NavigatorDefault()},
+            initialRoute: PinkConstant.DEFAULT_PAGE_NAME,
+            routes: {PinkConstant.DEFAULT_PAGE_NAME: (_) => NavigatorDefault()},
             navigatorObservers: [],
             title: title,
             onGenerateTitle: onGenerateTitle,

@@ -6,8 +6,7 @@ import cn.cheney.flutter.pink.router.NativeCallback
 import cn.cheney.flutter.pink.router.PinkRouter
 import cn.cheney.flutter.pink.router.ResultCallback
 import cn.cheney.flutter.pink.router.core.observer.PageObserver
-import cn.cheney.flutter.pink.router.model.RouteSettings
-import cn.cheney.flutter.pink.router.util.Logger
+import cn.cheney.flutter.pink.router.entity.RouteSettings
 import io.flutter.app.FlutterApplication
 import java.io.Serializable
 

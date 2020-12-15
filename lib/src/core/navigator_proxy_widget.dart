@@ -27,6 +27,7 @@ class NavigatorProxyWidgetState extends State<NavigatorProxyWidget> {
   }
 
   Future<dynamic> push(String url, Map<String, dynamic> params) {
+
     final navigatorState = widget.navigator.tryStateOf<NavigatorState>();
     bool isNested = false;
     if (null != params) {
@@ -78,10 +79,6 @@ class NavigatorProxyWidgetState extends State<NavigatorProxyWidget> {
             .willAppear(willLastPage.settings);
       }
       PinkRouterWrapper.pageObserverSendChannel.didDisappear(lastPage.settings);
-      if (null != willLastPage) {
-        PinkRouterWrapper.pageObserverSendChannel
-            .didAppear(willLastPage.settings);
-      }
       navigatorState?.pop(result);
     }
     print("maybePop isBack=$isBackPress result=$result canPop=$needPop ");

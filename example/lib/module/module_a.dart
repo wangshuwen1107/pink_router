@@ -29,41 +29,35 @@ class ModuleA with PinkModule, PageLifeCycleObserver {
 
   @override
   void create(RouteSettings routeSettings) {
-    print(
-        "LifeCycle ${routeSettings.name} arguments=${routeSettings.arguments} create");
+    //print("LifeCycle ${routeSettings.name} arguments=${routeSettings.arguments} create");
   }
 
   @override
   void willAppear(RouteSettings routeSettings) {
-    print(
-        "LifeCycle ${routeSettings.name} arguments=${routeSettings.arguments} willAppear");
+    //print("LifeCycle ${routeSettings.name} arguments=${routeSettings.arguments} willAppear");
   }
 
   @override
   void didAppear(RouteSettings routeSettings) {
-    print(
-        "LifeCycle ${routeSettings.name} arguments=${routeSettings.arguments} didAppear");
+    //print("LifeCycle ${routeSettings.name} arguments=${routeSettings.arguments} didAppear");
   }
 
 
   @override
   void willDisappear(RouteSettings routeSettings) {
-    print(
-        "LifeCycle ${routeSettings.name} arguments=${routeSettings.arguments} willDisappear");
+    // print("LifeCycle ${routeSettings.name} arguments=${routeSettings.arguments} willDisappear");
   }
 
 
   @override
   void didDisappear(RouteSettings routeSettings) {
-    print(
-        "LifeCycle ${routeSettings.name} arguments=${routeSettings.arguments} didDisappear");
+    //print("LifeCycle ${routeSettings.name} arguments=${routeSettings.arguments} didDisappear");
   }
 
 
   @override
   void destroy(RouteSettings routeSettings) {
-    print(
-        "LifeCycle ${routeSettings.name} arguments=${routeSettings.arguments} destroy");
+    //print("LifeCycle ${routeSettings.name} arguments=${routeSettings.arguments} destroy");
   }
 
 

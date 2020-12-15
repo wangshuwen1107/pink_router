@@ -1,7 +1,6 @@
-package cn.cheney.flutter.pink.router.model
+package cn.cheney.flutter.pink.router.entity
 
 import android.app.Activity
-import java.util.*
 
 class RouteSettings {
 
@@ -16,7 +15,7 @@ class RouteSettings {
 
     companion object {
 
-        fun flutter(url: String, params: Map<String, Any?>): RouteSettings {
+        fun flutter(url: String, params: Map<String, Any?>?): RouteSettings {
             val routerSettings = RouteSettings()
             routerSettings.url = url
             routerSettings.params = params
@@ -36,7 +35,7 @@ class RouteSettings {
         return if (isFlutter) {
             "Flutter url=$url, params=$params"
         } else {
-            "Native  activity=${activity?.javaClass?.canonicalName}"
+            "Native activity=${activity?.javaClass?.canonicalName}"
         }
     }
 

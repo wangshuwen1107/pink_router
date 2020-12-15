@@ -2,7 +2,7 @@ package cn.cheney.flutter.pink.router.core.observer
 
 import cn.cheney.flutter.pink.router.core.ActivityDelegate
 import cn.cheney.flutter.pink.router.core.PinkRouterImpl
-import cn.cheney.flutter.pink.router.model.RouteSettings
+import cn.cheney.flutter.pink.router.entity.RouteSettings
 import cn.cheney.flutter.pink.router.util.Logger
 import io.flutter.embedding.android.PinkActivity
 import io.flutter.embedding.android.params
@@ -24,7 +24,7 @@ internal object PageObserverManager {
         pageObserverList.forEach {
             it.create(routeSettings)
         }
-        Logger.d("LifeCycle create $routeSettings")
+        Logger.d("LifeCycle $routeSettings create")
     }
 
     fun willAppear(routeSettings: RouteSettings) {
@@ -40,7 +40,7 @@ internal object PageObserverManager {
         pageObserverList.forEach {
             it.willAppear(routeSettings)
         }
-        Logger.d("LifeCycle willAppear $routeSettings")
+        Logger.d("LifeCycle $routeSettings willAppear")
     }
 
     fun didAppear(routeSettings: RouteSettings) {
@@ -56,7 +56,7 @@ internal object PageObserverManager {
         pageObserverList.forEach {
             it.didAppear(routeSettings)
         }
-        Logger.d("LifeCycle didAppear $routeSettings")
+        Logger.d("LifeCycle $routeSettings didAppear")
     }
 
     fun willDisappear(routeSettings: RouteSettings) {
@@ -72,7 +72,7 @@ internal object PageObserverManager {
         pageObserverList.forEach {
             it.willDisappear(routeSettings)
         }
-        Logger.d("LifeCycle willDisappear $routeSettings")
+        Logger.d("LifeCycle $routeSettings willDisappear")
     }
 
     fun didDisappear(routeSettings: RouteSettings) {
@@ -88,7 +88,7 @@ internal object PageObserverManager {
         pageObserverList.forEach {
             it.didDisappear(routeSettings)
         }
-        Logger.d("LifeCycle didDisappear $routeSettings")
+        Logger.d("LifeCycle $routeSettings didDisappear")
     }
 
     fun destroy(routeSettings: RouteSettings) {
@@ -98,7 +98,7 @@ internal object PageObserverManager {
         pageObserverList.forEach {
             it.destroy(routeSettings)
         }
-        Logger.d("LifeCycle destroy $routeSettings")
+        Logger.d("LifeCycle $routeSettings destroy")
     }
 
 

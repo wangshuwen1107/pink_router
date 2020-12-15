@@ -11,7 +11,7 @@ import io.flutter.plugin.common.MethodChannel
 typealias MethodHandler = (Any?, MethodChannel.Result) -> Unit
 typealias EventHandler = (String, Any?) -> Unit
 
-class ChannelProxy(private val name: String, messenger: BinaryMessenger) {
+class ChannelProxy(name: String, messenger: BinaryMessenger) {
 
     private val methodChannel = MethodChannel(messenger, name + "_method_channel")
     private val eventChannel = EventChannel(messenger, name + "_event_channel")

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pink_router/src/core/pink_router_wrapper.dart';
 import 'channel_proxy.dart';
-import '../core/observer/navigator_page_observers.dart';
+import '../core/observer/navigator_page_observer_manager.dart';
 
 class PageObserverReceiveChannel {
 

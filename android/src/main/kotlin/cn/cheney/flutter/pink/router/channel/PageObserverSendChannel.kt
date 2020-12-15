@@ -1,6 +1,6 @@
 package cn.cheney.flutter.pink.router.channel
 
-import cn.cheney.flutter.pink.router.model.RouteSettings
+import cn.cheney.flutter.pink.router.entity.RouteSettings
 import io.flutter.plugin.common.MethodChannel
 
 class PageObserverSendChannel(private val channel: ChannelProxy) {

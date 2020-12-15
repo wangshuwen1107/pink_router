@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pink_router/src/core/pink_router_wrapper.dart';
 import 'channel_proxy.dart';
-import '../core/observer/navigator_page_observers.dart';
+import '../entity/pink_const.dart';
 
 class PageObserverSendChannel {
 
@@ -10,27 +9,39 @@ class PageObserverSendChannel {
   PageObserverSendChannel(this._channelProxy);
 
   create(RouteSettings settings) {
-    _sendLifeCycle("create", settings);
+    if(settings.name != PinkConstant.DEFAULT_PAGE_NAME){
+      _sendLifeCycle("create", settings);
+    }
   }
 
   willAppear(RouteSettings settings) {
-    _sendLifeCycle("willAppear", settings);
+    if(settings.name != PinkConstant.DEFAULT_PAGE_NAME){
+      _sendLifeCycle("willAppear", settings);
+    }
   }
 
   didAppear(RouteSettings settings) {
-    _sendLifeCycle("didAppear", settings);
+    if(settings.name != PinkConstant.DEFAULT_PAGE_NAME){
+      _sendLifeCycle("didAppear", settings);
+    }
   }
 
   willDisappear(RouteSettings settings) {
-    _sendLifeCycle("willDisappear", settings);
+    if(settings.name != PinkConstant.DEFAULT_PAGE_NAME){
+      _sendLifeCycle("willDisappear", settings);
+    }
   }
 
   didDisappear(RouteSettings settings) {
-    _sendLifeCycle("didDisappear", settings);
+    if(settings.name != PinkConstant.DEFAULT_PAGE_NAME){
+      _sendLifeCycle("didDisappear", settings);
+    }
   }
 
   destroy(RouteSettings settings) {
-    _sendLifeCycle("destroy", settings);
+    if(settings.name != PinkConstant.DEFAULT_PAGE_NAME){
+      _sendLifeCycle("destroy", settings);
+    }
   }
 
   _sendLifeCycle(String lifeCycle, RouteSettings settings) {

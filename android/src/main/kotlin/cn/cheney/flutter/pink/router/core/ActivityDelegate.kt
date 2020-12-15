@@ -2,13 +2,11 @@ package cn.cheney.flutter.pink.router.core
 
 import android.app.Activity
 import android.app.Application
-import android.content.Context
 import android.os.Bundle
 import cn.cheney.flutter.pink.router.core.observer.PageObserverManager
-import cn.cheney.flutter.pink.router.model.RouteSettings
+import cn.cheney.flutter.pink.router.entity.RouteSettings
 import io.flutter.embedding.android.PinkActivity
 import java.lang.ref.WeakReference
-import java.util.*
 
 object ActivityDelegate : Application.ActivityLifecycleCallbacks {
 
