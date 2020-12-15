@@ -21,13 +21,24 @@ class NavigatorProxyWidget extends StatefulWidget {
 class NavigatorProxyWidgetState extends State<NavigatorProxyWidget> {
   List<PageRoute> get pageRouteList => widget.pinkNavigatorObserver.pageRoutes;
 
+  bool isBackground = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return widget.navigator;
   }
 
   Future<dynamic> push(String url, Map<String, dynamic> params) {
-
     final navigatorState = widget.navigator.tryStateOf<NavigatorState>();
     bool isNested = false;
     if (null != params) {

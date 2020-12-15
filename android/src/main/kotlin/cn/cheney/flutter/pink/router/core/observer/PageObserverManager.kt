@@ -24,7 +24,7 @@ internal object PageObserverManager {
         pageObserverList.forEach {
             it.create(routeSettings)
         }
-        Logger.d("LifeCycle $routeSettings create")
+        Logger.d("📒LifeCycle $routeSettings create")
     }
 
     fun willAppear(routeSettings: RouteSettings) {
@@ -40,7 +40,7 @@ internal object PageObserverManager {
         pageObserverList.forEach {
             it.willAppear(routeSettings)
         }
-        Logger.d("LifeCycle $routeSettings willAppear")
+        Logger.d("📒LifeCycle $routeSettings willAppear")
     }
 
     fun didAppear(routeSettings: RouteSettings) {
@@ -56,7 +56,7 @@ internal object PageObserverManager {
         pageObserverList.forEach {
             it.didAppear(routeSettings)
         }
-        Logger.d("LifeCycle $routeSettings didAppear")
+        Logger.d("📒LifeCycle $routeSettings didAppear")
     }
 
     fun willDisappear(routeSettings: RouteSettings) {
@@ -72,7 +72,7 @@ internal object PageObserverManager {
         pageObserverList.forEach {
             it.willDisappear(routeSettings)
         }
-        Logger.d("LifeCycle $routeSettings willDisappear")
+        Logger.d("📒LifeCycle $routeSettings willDisappear")
     }
 
     fun didDisappear(routeSettings: RouteSettings) {
@@ -88,7 +88,7 @@ internal object PageObserverManager {
         pageObserverList.forEach {
             it.didDisappear(routeSettings)
         }
-        Logger.d("LifeCycle $routeSettings didDisappear")
+        Logger.d("📒LifeCycle $routeSettings didDisappear")
     }
 
     fun destroy(routeSettings: RouteSettings) {
@@ -98,7 +98,7 @@ internal object PageObserverManager {
         pageObserverList.forEach {
             it.destroy(routeSettings)
         }
-        Logger.d("LifeCycle $routeSettings destroy")
+        Logger.d("📒LifeCycle $routeSettings destroy")
     }
 
 

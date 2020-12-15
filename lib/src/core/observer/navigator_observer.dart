@@ -22,7 +22,7 @@ class PinkNavigatorObserver extends NavigatorObserver {
     if (null == url || url.isEmpty || url == PinkConstant.DEFAULT_PAGE_NAME) {
       return;
     }
-    print("🐳 Flutter didPush url=$url params=${route.settings.arguments}");
+    //print("Flutter didPush url=$url params=${route.settings.arguments}");
     pageRoutes.add(route);
     PinkRouterWrapper.pageObserverSendChannel.didAppear(route.settings);
     PinkRouterWrapper.pageObserverSendChannel
@@ -39,8 +39,7 @@ class PinkNavigatorObserver extends NavigatorObserver {
     if (null == url || url.isEmpty || url == PinkConstant.DEFAULT_PAGE_NAME) {
       return;
     }
-    print(
-        "🐳 Flutter didPop url=${route.settings.name} previousRoute=${previousRoute.settings.name}");
+    //print("Flutter didPop url=${route.settings.name} previousRoute=${previousRoute.settings.name}");
     pageRoutes.removeLast();
     PinkRouterWrapper.pageObserverSendChannel.didAppear(previousRoute.settings);
     PinkRouterWrapper.pageObserverSendChannel.destroy(route.settings);

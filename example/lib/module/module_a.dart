@@ -57,7 +57,7 @@ class ModuleA with PinkModule, PageLifeCycleObserver {
 
   @override
   void destroy(RouteSettings routeSettings) {
-    //print("LifeCycle ${routeSettings.name} arguments=${routeSettings.arguments} destroy");
+   // print(" LifeCycle ${routeSettings.name} arguments=${routeSettings.arguments} destroy");
   }
 
 

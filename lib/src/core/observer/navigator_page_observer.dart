@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class PageLifeCycleObserver {
+mixin PageLifeCycleObserver {
 
   void create(RouteSettings routeSettings) {}
 

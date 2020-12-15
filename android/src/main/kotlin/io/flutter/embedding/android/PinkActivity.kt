@@ -4,18 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import cn.cheney.flutter.pink.router.core.PinkRouterImpl
-import cn.cheney.flutter.pink.router.container.ContainerDelegate
 import cn.cheney.flutter.pink.router.util.Logger
 import java.io.Serializable
 
 
 class PinkActivity : FlutterActivity() {
 
-    private var pinkDelegate: ContainerDelegate = ContainerDelegate()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        pinkDelegate.onCreate()
         onPush(url(), params())
     }
 
@@ -25,34 +21,9 @@ class PinkActivity : FlutterActivity() {
         onPush(url(), params())
     }
 
-    override fun onStart() {
-        super.onStart()
-        pinkDelegate.onStart()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        pinkDelegate.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        pinkDelegate.onPause()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        pinkDelegate.onStop()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        pinkDelegate.onDestroy()
-    }
-
 
     override fun onBackPressed() {
-        Logger.d("onBackPressed is called ")
+        Logger.d("FlutterActivity onBackPressed is called ")
         PinkRouterImpl.pop(null, true)
     }
 

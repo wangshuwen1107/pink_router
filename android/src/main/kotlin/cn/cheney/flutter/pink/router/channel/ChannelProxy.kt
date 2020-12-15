@@ -35,7 +35,6 @@ class ChannelProxy(name: String, messenger: BinaryMessenger) {
                     result.notImplemented()
                     return
                 }
-                Logger.d("💖 Flutter->Native[$methodName] args=${call.arguments}")
                 methodHandler.invoke(call.arguments, result)
             }
         })

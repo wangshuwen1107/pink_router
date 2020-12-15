@@ -20,6 +20,7 @@ class ChannelProxy {
       if (null == handler) {
         return Future.value(false);
       }
+      //print("🐳 Native->Flutter[$methodName] args=${call.arguments}");
       return handler.call(call.arguments);
     });
     _eventChannel.receiveBroadcastStream((args) {});
@@ -30,6 +31,7 @@ class ChannelProxy {
   }
 
   Future<T> invokeMethod<T>(String methodName, dynamic args) {
+    //print("🙈 Flutter->Native[$methodName] args=${args.arguments}");
     return _methodChannel.invokeMethod(methodName, args);
   }
 }

@@ -1,8 +1,11 @@
 package cn.cheney.flutter.pink.router.channel
 
 import android.text.TextUtils
+import cn.cheney.flutter.pink.router.core.ActivityDelegate
 import cn.cheney.flutter.pink.router.core.observer.PageObserverManager
 import cn.cheney.flutter.pink.router.entity.RouteSettings
+import io.flutter.embedding.android.PinkActivity
+import io.flutter.embedding.android.index
 
 class PageObserverReceiverChannel(private val channel: ChannelProxy) {
 
