@@ -5,5 +5,14 @@ class PinkConstant{
   
   static const String DEFAULT_PAGE_NAME = "/";
 
-  
+}
+
+
+enum PageLifeCycle{
+  create,
+  willAppear,
+  didAppear,
+  willDisappear,
+  didDisappear,
+  destroy
 }

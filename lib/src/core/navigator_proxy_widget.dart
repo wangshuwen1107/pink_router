@@ -3,7 +3,7 @@ import 'package:pink_router/src/core/pink_router_wrapper.dart';
 import 'observer/navigator_observer.dart';
 import '../util/pink_util.dart';
 import '../util/pink_stateful_widget.dart';
-import 'navigator_page_route.dart';
+import 'page_route.dart';
 
 class NavigatorProxyWidget extends StatefulWidget {
   const NavigatorProxyWidget(

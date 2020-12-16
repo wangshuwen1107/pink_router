@@ -6,9 +6,45 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage> with PageLifecycleAble {
+  @override
+  void create(RouteSettings routeSettings) {
+    print("MainPage ===create=== $routeSettings");
+  }
+
+  @override
+  void willAppear(RouteSettings routeSettings) {
+    print("MainPage ===willAppear=== $routeSettings");
+  }
+
+  @override
+  void didAppear(RouteSettings routeSettings) {
+    print("MainPage ===didAppear=== $routeSettings");
+  }
+
+  @override
+  void willDisappear(RouteSettings routeSettings) {
+    print("MainPage ===willDisappear=== $routeSettings");
+  }
+
+  @override
+  void didDisappear(RouteSettings routeSettings) {
+    print("MainPage ===didDisappear=== $routeSettings");
+  }
+
+  @override
+  void destroy(RouteSettings routeSettings) {
+    print("MainPage ===destroy=== $routeSettings");
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    print("main page build called ");
     return Scaffold(
       appBar: AppBar(
           title: Text(

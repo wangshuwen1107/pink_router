@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'navigator_default.dart';
-import 'pink_router.dart';
+import 'page_default.dart';
 import '../entity/pink_const.dart';
+import 'pink_router_wrapper.dart';
+
 class PinkApp extends MaterialApp {
   PinkApp({
     Key key,
@@ -25,7 +26,7 @@ class PinkApp extends MaterialApp {
     Map<LogicalKeySet, Intent> shortcuts,
   }) : super(
             key: key,
-            builder: PinkRouter.builder(),
+            builder:  PinkRouterWrapper.builder(),
             initialRoute: PinkConstant.DEFAULT_PAGE_NAME,
             routes: {PinkConstant.DEFAULT_PAGE_NAME: (_) => NavigatorDefault()},
             navigatorObservers: [],

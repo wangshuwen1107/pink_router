@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pink_router/pink.dart';
@@ -25,7 +23,7 @@ class _MyAppState extends State<MyApp>  {
 
     PinkRouter.init("pink");
     PinkRouter.register([ModuleA()]);
-    PinkRouter.addLifeCycleObserver(ModuleA());
+    PinkRouter.registerPageObserver(ModuleA());
   }
 
   @override

@@ -36,7 +36,7 @@ class PinkRouterWrapper {
 
   static GlobalKey<NavigatorProxyWidgetState> _navigatorProxyKey;
 
-  static PinkNavigatorObserver _pinkNavigatorObserver;
+  static PinkNavigatorObserver pinkNavigatorObserver;
 
   static TransitionBuilder builder() {
     if (null == _channelProxy) {
@@ -50,17 +50,17 @@ class PinkRouterWrapper {
           .registerToNative(_routerList)
           .then((value) {})
           .catchError((e) {});
-      _pinkNavigatorObserver = PinkNavigatorObserver();
+      pinkNavigatorObserver = PinkNavigatorObserver();
     }
     return (context, child) {
       final navigator = child is Navigator ? child : null;
-      if (!navigator.observers.contains(_pinkNavigatorObserver)) {
-        navigator.observers.add(_pinkNavigatorObserver);
+      if (!navigator.observers.contains(pinkNavigatorObserver)) {
+        navigator.observers.add(pinkNavigatorObserver);
       }
       return NavigatorProxyWidget(
         key: _navigatorProxyKey ??= GlobalKey<NavigatorProxyWidgetState>(),
         navigator: navigator,
-        pinkNavigatorObserver: _pinkNavigatorObserver,
+        pinkNavigatorObserver: pinkNavigatorObserver,
       );
     };
   }
@@ -74,10 +74,6 @@ class PinkRouterWrapper {
         _addRoute2Map(key, block: value);
       });
     });
-  }
-
-  static void addLifeCycleObserver(PageLifeCycleObserver observer){
-    NavigatorPageObserverManager.addLifeCycleObserver(observer);
   }
 
   static Future<T> push<T>(String url, Map<String, dynamic> params) {
@@ -99,11 +95,9 @@ class PinkRouterWrapper {
         extraParams: params);
     MethodBlock methodBlock = _methodMap[urlStr];
     if (null != methodBlock) {
-      print("🐳 Flutter method: $urlStr   params = $allParams");
-      return methodBlock.call(params);
+      return methodBlock.call(allParams);
     }
-    print("💘 Native method: $urlStr  params = $allParams");
-    return routeSendChannel.call(url, params);
+    return routeSendChannel.call(url, allParams);
   }
 
   static void _addRoute2Map(String url,

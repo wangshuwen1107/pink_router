@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'navigator_page_observer.dart';
+import '../../entity/pink_const.dart';
 
 class NavigatorPageObserverManager {
 
@@ -7,12 +8,16 @@ class NavigatorPageObserverManager {
 
   static List<PageLifeCycleObserver> _observerList = [];
 
-  static void addLifeCycleObserver(PageLifeCycleObserver observer) {
+  static void registerPageObserver(PageLifeCycleObserver observer) {
     _observerList.add(observer);
   }
 
+  static void unRegisterPageObserver(PageLifeCycleObserver observer) {
+    _observerList.remove(observer);
+  }
+
   static void create(RouteSettings settings) {
-    if (settings.name == "/") {
+    if (settings.name == PinkConstant.DEFAULT_PAGE_NAME) {
       return;
     }
     _observerList.forEach((observer) {
@@ -21,7 +26,7 @@ class NavigatorPageObserverManager {
   }
 
   static void willAppear(RouteSettings settings) {
-    if (settings.name == "/") {
+    if (settings.name == PinkConstant.DEFAULT_PAGE_NAME) {
       return;
     }
     _observerList.forEach((observer) {
@@ -30,7 +35,7 @@ class NavigatorPageObserverManager {
   }
 
   static void didAppear(RouteSettings settings) {
-    if (settings.name == "/") {
+    if (settings.name == PinkConstant.DEFAULT_PAGE_NAME) {
       return;
     }
     _observerList.forEach((observer) {
@@ -39,7 +44,7 @@ class NavigatorPageObserverManager {
   }
 
   static void willDisappear(RouteSettings settings) {
-    if (settings.name == "/") {
+    if (settings.name == PinkConstant.DEFAULT_PAGE_NAME) {
       return;
     }
     _observerList.forEach((observer) {
@@ -48,7 +53,7 @@ class NavigatorPageObserverManager {
   }
 
   static void didDisappear(RouteSettings settings) {
-    if (settings.name == "/") {
+    if (settings.name == PinkConstant.DEFAULT_PAGE_NAME) {
       return;
     }
     _observerList.forEach((observer) {
@@ -57,7 +62,7 @@ class NavigatorPageObserverManager {
   }
 
   static void destroy(RouteSettings settings) {
-    if (settings.name == "/") {
+    if (settings.name == PinkConstant.DEFAULT_PAGE_NAME) {
       return;
     }
     _observerList.forEach((observer) {

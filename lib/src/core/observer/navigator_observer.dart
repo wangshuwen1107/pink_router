@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../navigator_default.dart';
-import '../navigator_page_route.dart';
+import '../page_default.dart';
+import '../page_route.dart';
 import '../pink_router_wrapper.dart';
 import '../../entity/pink_const.dart';
 
-class PinkNavigatorObserver extends NavigatorObserver {
+class PinkNavigatorObserver extends RouteObserver {
   final pageRoutes = <PinkPageRoute>[
     PinkPageRoute(
         builder: (context) => const NavigatorDefault(),

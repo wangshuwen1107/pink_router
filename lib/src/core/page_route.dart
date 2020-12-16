@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PinkPageRoute<T> extends MaterialPageRoute<T> {
+
   final bool isNested;
 
   PinkPageRoute(

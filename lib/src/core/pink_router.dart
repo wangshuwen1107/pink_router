@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'observer/navigator_page_observer.dart';
 import 'pink_router_wrapper.dart';
 import '../module/pink_module.dart';
+import 'observer/navigator_page_observer_manager.dart';
 
 class PinkRouter {
   static String get scheme => _scheme;
@@ -10,20 +11,20 @@ class PinkRouter {
   static String _scheme = "pink";
 
   static void init(String scheme) {
-    assert(scheme.isNotEmpty);
+    assert(null!=scheme && scheme.isNotEmpty);
     _scheme = scheme;
-  }
-
-  static TransitionBuilder builder() {
-    return PinkRouterWrapper.builder();
   }
 
   static void register(List<PinkModule> modules) {
     PinkRouterWrapper.register(modules);
   }
 
-  static void addLifeCycleObserver(PageLifeCycleObserver observer) {
-    PinkRouterWrapper.addLifeCycleObserver(observer);
+  static void registerPageObserver(PageLifeCycleObserver observer) {
+    NavigatorPageObserverManager.registerPageObserver(observer);
+  }
+
+  static void unRegisterPageObserver(PageLifeCycleObserver observer) {
+    NavigatorPageObserverManager.unRegisterPageObserver(observer);
   }
 
   static Future<dynamic> push(String url, {Map<String, dynamic> params}) {
